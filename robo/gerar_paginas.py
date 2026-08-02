@@ -261,6 +261,7 @@ TEMPLATE = """<!DOCTYPE html>
 <script>window.PAGINA = {{ slug: "{slug}" }};</script>
 <script src="js/motor.js"></script>
 <script src="js/app.js"></script>
+<script data-goatcounter="https://sortelabs.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
 """
