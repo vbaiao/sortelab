@@ -76,6 +76,7 @@ TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-site-verification" content="1ASDodTUQNNEFQTdYF4TCvACuHrtQRBXcfsDynb9Msk" />
 <title>{nome}: Gerador, Bolão com Rateio e Conferidor — SorteLabs</title>
 <meta name="description" content="{descricao}">
 <meta property="og:title" content="{nome} — Gerador, Bolão e Conferidor | SorteLabs">
