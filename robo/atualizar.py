@@ -46,22 +46,33 @@ def atualizar_loteria(cfg):
     ultimo_local = concursos[-1][0]
 
     try:
-        ultimo_api, data_api, dezenas_api = buscar(cfg["slug"])
+        ultimo_api, _, _ = buscar(cfg["slug"])
     except Exception as erro:
         print(f"{cfg['nome']}: API indisponível ({erro}).")
         return None
 
-    if ultimo_api <= ultimo_local:
+    # O endpoint "último" da Caixa às vezes fica defasado (aponta para um
+    # concurso antigo mesmo com o novo já publicado). Sonda adiante para
+    # descobrir o último concurso que existe de verdade.
+    ultimo_real = max(ultimo_api, ultimo_local)
+    for _ in range(10):
+        try:
+            proximo = buscar(cfg["slug"], ultimo_real + 1)
+        except Exception:
+            break
+        ultimo_real = proximo[0]
+        time.sleep(0.3)
+
+    if ultimo_real <= ultimo_local:
         print(f"{cfg['nome']}: em dia (concurso {ultimo_local}).")
         return False
 
     inicio = ultimo_local + 1
-    fim = min(ultimo_api, ultimo_local + MAX_POR_EXECUCAO)
+    fim = min(ultimo_real, ultimo_local + MAX_POR_EXECUCAO)
     novos = []
     for n in range(inicio, fim + 1):
         try:
-            info = ((ultimo_api, data_api, dezenas_api) if n == ultimo_api
-                    else buscar(cfg["slug"], n))
+            info = buscar(cfg["slug"], n)
         except Exception as erro:
             print(f"{cfg['nome']}: falha no concurso {n} ({erro}); "
                   f"salvando o que veio.")
