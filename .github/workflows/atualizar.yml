@@ -2,11 +2,9 @@ name: Atualizar resultados das loterias
 
 on:
   schedule:
-    # Horários em UTC. Sorteios saem ~20h de Brasília (23h UTC);
-    # roda 00:30 UTC (21:30 BRT) com repescagens às 02:30 e 12:00 UTC.
-    - cron: "30 0 * * *"
-    - cron: "30 2 * * *"
-    - cron: "0 12 * * *"
+    # De hora em hora, no minuto 30 (horário UTC). Quando não há concurso
+    # novo, o robô só confere e encerra — não custa nada.
+    - cron: "30 * * * *"
   workflow_dispatch: {}   # permite rodar manualmente pelo site do GitHub
 
 permissions:
