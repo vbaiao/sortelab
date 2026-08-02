@@ -1,0 +1,99 @@
+# -*- coding: utf-8 -*-
+"""Robô de atualização do SorteLab.
+
+Para cada loteria, consulta a API oficial da Caixa, baixa os concursos que
+faltam em dados/{slug}.json e regrava o arquivo. Sem interação: feito para
+rodar no GitHub Actions (ou manualmente: python robo/atualizar.py).
+
+Códigos de saída: 0 = ok (com ou sem novidades); 1 = nenhuma loteria pôde
+ser verificada (API indisponível).
+"""
+
+import json
+import os
+import sys
+import time
+import urllib.request
+from datetime import datetime, timezone
+
+from loterias import API_BASE, LOTERIAS
+
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PASTA_DADOS = os.path.join(RAIZ, "dados")
+MAX_POR_EXECUCAO = 120   # limite de concursos baixados por loteria por rodada
+
+
+def buscar(slug, numero=None, timeout=20):
+    url = API_BASE + slug + ("" if numero is None else f"/{numero}")
+    req = urllib.request.Request(url, headers={
+        "User-Agent": "Mozilla/5.0 (SorteLab; +https://github.com)",
+        "Accept": "application/json",
+    })
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        dados = json.load(resp)
+    return (int(dados["numero"]), dados["dataApuracao"],
+            sorted(int(x) for x in dados["listaDezenas"]))
+
+
+def atualizar_loteria(cfg):
+    caminho = os.path.join(PASTA_DADOS, f"{cfg['slug']}.json")
+    if not os.path.exists(caminho):
+        print(f"{cfg['nome']}: sem JSON base — rode importar_csv.py antes.")
+        return None
+    with open(caminho, encoding="utf-8") as f:
+        base = json.load(f)
+    concursos = base["concursos"]
+    ultimo_local = concursos[-1][0]
+
+    try:
+        ultimo_api, data_api, dezenas_api = buscar(cfg["slug"])
+    except Exception as erro:
+        print(f"{cfg['nome']}: API indisponível ({erro}).")
+        return None
+
+    if ultimo_api <= ultimo_local:
+        print(f"{cfg['nome']}: em dia (concurso {ultimo_local}).")
+        return False
+
+    inicio = ultimo_local + 1
+    fim = min(ultimo_api, ultimo_local + MAX_POR_EXECUCAO)
+    novos = []
+    for n in range(inicio, fim + 1):
+        try:
+            info = ((ultimo_api, data_api, dezenas_api) if n == ultimo_api
+                    else buscar(cfg["slug"], n))
+        except Exception as erro:
+            print(f"{cfg['nome']}: falha no concurso {n} ({erro}); "
+                  f"salvando o que veio.")
+            break
+        novos.append([info[0], info[1], info[2]])
+        time.sleep(0.4)   # educação com a API
+
+    if not novos:
+        return False
+    concursos.extend(novos)
+    base["atualizado"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    with open(caminho, "w", encoding="utf-8") as f:
+        json.dump(base, f, ensure_ascii=False, separators=(",", ":"))
+    print(f"{cfg['nome']}: +{len(novos)} concurso(s) "
+          f"(até {novos[-1][0]} de {novos[-1][1]}).")
+    return True
+
+
+def main():
+    verificadas = 0
+    houve_novidade = False
+    for cfg in LOTERIAS:
+        resultado = atualizar_loteria(cfg)
+        if resultado is not None:
+            verificadas += 1
+        if resultado:
+            houve_novidade = True
+    if verificadas == 0:
+        print("Nenhuma loteria pôde ser verificada.")
+        sys.exit(1)
+    print("Novidades!" if houve_novidade else "Tudo em dia.")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,281 @@
+/* SorteLab — estética de volante de aposta.
+   Paleta: papel #FAF8F3 · tinta #1A2E24 · verde-caixa #17845C ·
+   dourado #C99011 · linha #DCD6C8 · accent por loteria via --cor. */
+
+:root {
+  --papel: #FAF8F3;
+  --tinta: #1A2E24;
+  --verde: #17845C;
+  --dourado: #C99011;
+  --linha: #DCD6C8;
+  --cor: var(--verde);          /* cada página de loteria sobrescreve */
+  --cor-suave: #17845C14;
+  --raio: 14px;
+  --fonte-display: "Archivo Black", "Arial Black", sans-serif;
+  --fonte-corpo: "Rubik", "Segoe UI", sans-serif;
+  --fonte-dados: "Consolas", "Menlo", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--fonte-corpo);
+  color: var(--tinta);
+  background-color: var(--papel);
+  /* grade sutil de volante */
+  background-image:
+    linear-gradient(#1a2e2408 1px, transparent 1px),
+    linear-gradient(90deg, #1a2e2408 1px, transparent 1px);
+  background-size: 28px 28px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--verde); }
+
+.miolo { max-width: 880px; margin: 0 auto; padding: 0 16px; }
+
+/* ---------------- cabeçalho ---------------- */
+
+.topo {
+  background: var(--tinta);
+  color: #fff;
+  padding: 10px 0;
+}
+.topo .miolo {
+  display: flex; align-items: center; gap: 10px;
+  justify-content: space-between;
+}
+.marca {
+  font-family: var(--fonte-display);
+  font-size: 1.35rem;
+  color: #fff; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  letter-spacing: .5px;
+}
+.marca .bolinha-logo {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #ffffffcc, var(--dourado) 58%, #8a6008);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--tinta); font-size: .72rem; font-family: var(--fonte-display);
+}
+.topo nav a {
+  color: #fffc; text-decoration: none; font-size: .9rem; margin-left: 14px;
+}
+.topo nav a:hover { color: #fff; }
+
+/* faixa da loteria */
+.faixa-loteria {
+  background: var(--cor);
+  color: #fff;
+  padding: 22px 0 18px;
+}
+.faixa-loteria h1 {
+  font-family: var(--fonte-display);
+  margin: 0 0 4px;
+  font-size: clamp(1.6rem, 5vw, 2.3rem);
+  letter-spacing: .5px;
+}
+.faixa-loteria .sub { margin: 0; opacity: .92; font-size: .95rem; }
+.ultimo-resultado {
+  margin-top: 14px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  font-size: .9rem;
+}
+.ultimo-resultado .rotulo {
+  background: #ffffff22; border-radius: 20px; padding: 3px 12px;
+}
+
+/* ---------------- bolinhas ---------------- */
+
+.bolas { display: flex; flex-wrap: wrap; gap: 7px; }
+.bola {
+  width: 42px; height: 42px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--fonte-display); font-size: 1rem;
+  color: var(--tinta);
+  background: radial-gradient(circle at 32% 28%, #fff, #f2ecdd 55%, #cfc6ae);
+  box-shadow: inset -2px -3px 6px #0002, 0 1px 2px #0003;
+  flex-shrink: 0;
+}
+.bola.acerto {
+  color: #fff;
+  background: radial-gradient(circle at 32% 28%, #ffffffb0, var(--cor) 52%, #000c 160%);
+  box-shadow: inset -2px -3px 6px #0004, 0 1px 3px #0004;
+}
+.bola.mini { width: 34px; height: 34px; font-size: .82rem; }
+
+/* ---------------- abas ---------------- */
+
+.abas {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--papel);
+  border-bottom: 2px solid var(--linha);
+  overflow-x: auto;
+}
+.abas .miolo { display: flex; gap: 2px; padding: 0 8px; }
+.aba {
+  border: 0; background: none; cursor: pointer;
+  font-family: var(--fonte-corpo); font-weight: 600; font-size: .92rem;
+  color: #1a2e2499;
+  padding: 13px 13px 11px;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+}
+.aba[aria-selected="true"] { color: var(--cor); border-bottom-color: var(--cor); }
+.aba:focus-visible { outline: 2px solid var(--cor); outline-offset: -2px; }
+
+/* ---------------- cartões e formulários ---------------- */
+
+.painel { padding: 22px 0 40px; }
+.cartao {
+  background: #fff;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px #1a2e240a;
+}
+.cartao h2 {
+  margin: 0 0 4px; font-size: 1.15rem; font-family: var(--fonte-display);
+  font-weight: 400;
+}
+.cartao .dica { margin: 0 0 14px; font-size: .9rem; color: #1a2e24aa; }
+
+.linha-campos { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+.campo { display: flex; flex-direction: column; gap: 4px; min-width: 130px; flex: 1; }
+.campo label { font-size: .82rem; font-weight: 600; color: #1a2e24bb; }
+.campo input, .campo select, textarea {
+  font-family: var(--fonte-corpo); font-size: 1rem;
+  padding: 10px 12px;
+  border: 1.5px solid var(--linha); border-radius: 10px;
+  background: var(--papel); color: var(--tinta);
+  width: 100%;
+}
+.campo input:focus, .campo select:focus, textarea:focus {
+  outline: 2px solid var(--cor); border-color: var(--cor);
+}
+textarea { resize: vertical; min-height: 110px; font-family: var(--fonte-dados); font-size: .95rem; }
+
+.botao {
+  font-family: var(--fonte-corpo); font-weight: 700; font-size: 1rem;
+  background: var(--cor); color: #fff;
+  border: 0; border-radius: 10px;
+  padding: 12px 20px; cursor: pointer;
+}
+.botao:hover { filter: brightness(1.08); }
+.botao:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
+.botao.secundario {
+  background: none; color: var(--cor); border: 2px solid var(--cor);
+}
+.botao.mini { font-size: .85rem; padding: 7px 12px; }
+.botoes { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* ---------------- resultados das ferramentas ---------------- */
+
+.jogo-gerado {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 12px 0; border-bottom: 1px dashed var(--linha);
+}
+.jogo-gerado:last-child { border-bottom: 0; }
+.jogo-gerado .num { font-family: var(--fonte-dados); font-size: .85rem; color: #1a2e2488; min-width: 54px; }
+.jogo-gerado .info { font-size: .8rem; color: #1a2e2488; }
+
+.caixa-resumo {
+  background: var(--cor-suave);
+  border-left: 4px solid var(--cor);
+  border-radius: 0 10px 10px 0;
+  padding: 12px 14px; margin-top: 14px;
+  font-size: .95rem;
+}
+.caixa-resumo strong { color: var(--cor); }
+
+.premio { font-weight: 700; color: var(--dourado); }
+
+table.tabela { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.tabela th, .tabela td {
+  text-align: right; padding: 8px 10px; border-bottom: 1px solid var(--linha);
+}
+.tabela th { font-size: .78rem; text-transform: uppercase; letter-spacing: .4px; color: #1a2e2499; }
+.tabela td:first-child, .tabela th:first-child { text-align: left; }
+.tabela tr.escolhida td { background: var(--cor-suave); }
+.rolagem-x { overflow-x: auto; }
+
+.lista-rank { list-style: none; margin: 0; padding: 0; }
+.lista-rank li {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 0; border-bottom: 1px dashed var(--linha);
+  font-size: .95rem;
+}
+.lista-rank .valor { margin-left: auto; font-family: var(--fonte-dados); font-size: .88rem; color: #1a2e24aa; }
+
+.msg-whats {
+  font-family: var(--fonte-dados); font-size: .88rem;
+  white-space: pre-wrap;
+  background: var(--papel); border: 1.5px dashed var(--linha);
+  border-radius: 10px; padding: 12px; margin: 12px 0;
+}
+
+.aviso-obs {
+  font-size: .85rem; color: #1a2e24aa;
+  background: #fff; border: 1px dashed var(--linha);
+  border-radius: 10px; padding: 10px 12px; margin-top: 12px;
+}
+
+.erro { color: #A61324; font-size: .9rem; margin-top: 8px; }
+
+/* ---------------- home ---------------- */
+
+.heroi { padding: 40px 0 10px; }
+.heroi h1 {
+  font-family: var(--fonte-display); font-weight: 400;
+  font-size: clamp(1.7rem, 6vw, 2.6rem);
+  line-height: 1.15; margin: 0 0 12px;
+}
+.heroi h1 em { font-style: normal; color: var(--verde); }
+.heroi p { max-width: 560px; font-size: 1.05rem; }
+
+.grade-loterias {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  padding: 20px 0 30px;
+}
+.card-loteria {
+  border-radius: var(--raio);
+  padding: 16px 14px;
+  color: #fff; text-decoration: none;
+  display: flex; flex-direction: column; gap: 3px;
+  min-height: 92px;
+  box-shadow: 0 2px 5px #1a2e2426;
+  transition: transform .12s ease;
+}
+.card-loteria:hover { transform: translateY(-2px); }
+.card-loteria strong { font-family: var(--fonte-display); font-weight: 400; font-size: 1.05rem; }
+.card-loteria span { font-size: .8rem; opacity: .9; }
+
+/* ---------------- rodapé honesto ---------------- */
+
+.rodape {
+  background: var(--tinta); color: #fffc;
+  margin-top: 30px; padding: 26px 0 30px;
+  font-size: .88rem;
+}
+.rodape strong { color: #fff; }
+.rodape a { color: var(--dourado); }
+.selo-honesto {
+  border: 1.5px dashed #ffffff55; border-radius: 10px;
+  padding: 12px 14px; margin-bottom: 14px; max-width: 640px;
+}
+
+/* espaço reservado para anúncios (AdSense futuro) */
+.anuncio { display: none; }
+
+@media (max-width: 540px) {
+  .bola { width: 38px; height: 38px; font-size: .9rem; }
+  .topo nav a { margin-left: 8px; font-size: .82rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-loteria { transition: none; }
+}

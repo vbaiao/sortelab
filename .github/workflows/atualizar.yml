@@ -1,0 +1,44 @@
+name: Atualizar resultados das loterias
+
+on:
+  schedule:
+    # Horários em UTC. Sorteios saem ~20h de Brasília (23h UTC);
+    # roda 00:30 UTC (21:30 BRT) com repescagens às 02:30 e 12:00 UTC.
+    - cron: "30 0 * * *"
+    - cron: "30 2 * * *"
+    - cron: "0 12 * * *"
+  workflow_dispatch: {}   # permite rodar manualmente pelo site do GitHub
+
+permissions:
+  contents: write
+
+concurrency:
+  group: atualizar-resultados
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Buscar concursos novos na API da Caixa
+        run: python robo/atualizar.py
+
+      - name: Publicar se houver novidade
+        run: |
+          if git diff --quiet dados/; then
+            echo "Nada novo hoje."
+          else
+            git config user.name "Robô SorteLab"
+            git config user.email "actions@github.com"
+            git add dados/
+            git commit -m "Resultados atualizados automaticamente"
+            git push
+          fi

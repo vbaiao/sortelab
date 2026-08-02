@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>SorteLab — teste do motor JS</title>
+<style>body{font-family:monospace;padding:20px} .ok{color:green} .erro{color:red}</style>
+</head>
+<body>
+<h1>Teste do motor JS contra o gabarito Python</h1>
+<div id="saida">Rodando…</div>
+<script src="js/motor.js"></script>
+<script>
+"use strict";
+const SL = window.SorteLab;
+const saida = document.getElementById("saida");
+const linhas = [];
+
+function log(ok, texto) {
+  linhas.push('<div class="' + (ok ? "ok" : "erro") + '">' +
+    (ok ? "OK  " : "ERRO ") + texto + "</div>");
+}
+
+fetch("dados/gabarito_teste.json").then(r => r.json()).then(async gabarito => {
+  for (const slug of Object.keys(gabarito)) {
+    const cfg = SL.LOTERIAS[slug];
+    const esperado = gabarito[slug];
+    const base = await fetch("dados/" + slug + ".json").then(r => r.json());
+    const stats = SL.calcularEstatisticas(cfg, base.concursos);
+
+    log(stats.total === esperado.total,
+        cfg.nome + " total concursos: " + stats.total + " (esperado " + esperado.total + ")");
+
+    const campeao = SL.jogoCampeao(cfg, stats);
+    const bate = JSON.stringify(campeao) === JSON.stringify(esperado.campeao);
+    log(bate, cfg.nome + " campeão: " + campeao.join("-") +
+        (bate ? "" : " ≠ " + esperado.campeao.join("-")));
+
+    const custo = SL.custoAposta(cfg, cfg.apostaMin);
+    log(Math.abs(custo - esperado.custo_minimo) < 0.001,
+        cfg.nome + " custo mínimo: " + custo);
+
+    const chance = SL.chanceUmEm(cfg, cfg.apostaMin, 1);
+    log(chance === esperado.chance_um_em,
+        cfg.nome + " chance 1 em: " + chance + " (esperado " + esperado.chance_um_em + ")");
+
+    // geração: 5 jogos válidos e distintos
+    const jogos = SL.gerarJogos(cfg, stats, 3, cfg.apostaMin);
+    const validos = jogos.every(j => SL.jogoValido(cfg, j) &&
+                                     j.length === cfg.apostaMin);
+    log(validos, cfg.nome + " geração: 3 jogos válidos");
+
+    // conferidor: o último resultado contra ele mesmo = prêmio máximo
+    const ultimo = base.concursos[base.concursos.length - 1][2];
+    if (ultimo.length >= cfg.apostaMin) {
+      const conf = SL.conferirJogos(cfg, ultimo, [ultimo.slice(0, cfg.apostaMin)]);
+      log(conf[0].acertos.length > 0, cfg.nome + " conferidor: " +
+          conf[0].acertos.length + " acertos no auto-teste");
+    }
+  }
+  const erros = linhas.filter(l => l.includes("erro")).length;
+  linhas.unshift("<h2>" + (erros ? erros + " ERRO(S)" : "TUDO OK ✔") + "</h2>");
+  saida.innerHTML = linhas.join("");
+  document.title = (erros ? "ERROS " + erros : "TUDO OK") + " — teste SorteLab";
+}).catch(e => { saida.textContent = "Falha ao rodar: " + e; });
+</script>
+</body>
+</html>
