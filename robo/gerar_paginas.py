@@ -21,7 +21,7 @@ PAGINAS = [
     dict(slug="lotofacil", nome="Lotofácil", cor="#930089",
          aposta="15 a 20 dezenas de 1 a 25 · sorteio de 15",
          descricao="Gerador estatístico, conferidor de vários jogos e bolão "
-                   "com rateio para a Lotofácil. Ferramentas grátis do SorteLab.",
+                   "com rateio para a Lotofácil. Ferramentas grátis do SorteLabs.",
          intro="A Lotofácil sorteia 15 dezenas de 25 — a queridinha dos "
                "bolões. Gere jogos com o perfil típico dos sorteios, monte o "
                "bolão do grupo com rateio pronto para o WhatsApp e confira "
@@ -29,14 +29,14 @@ PAGINAS = [
     dict(slug="quina", nome="Quina", cor="#260085",
          aposta="5 a 15 dezenas de 1 a 80 · sorteio de 5",
          descricao="Gerador estatístico, conferidor e bolão com rateio para a "
-                   "Quina. Ferramentas grátis do SorteLab.",
+                   "Quina. Ferramentas grátis do SorteLabs.",
          intro="A Quina sorteia 5 dezenas de 80, todos os dias. Gere jogos "
                "guiados pela estatística do histórico completo, planeje o "
                "orçamento e confira seus jogos em segundos."),
     dict(slug="lotomania", nome="Lotomania", cor="#E07000",
          aposta="50 dezenas de 00 a 99 · sorteio de 20 · 0 acertos também paga",
          descricao="Gerador de 50 dezenas, conferidor e bolão com rateio para "
-                   "a Lotomania. Ferramentas grátis do SorteLab.",
+                   "a Lotomania. Ferramentas grátis do SorteLabs.",
          intro="Na Lotomania você marca 50 dezenas de 100 e ganha com 15 a 20 "
                "acertos — ou com nenhum! Gere seu cartão com base na "
                "estatística e confira sem sofrimento (são muitas dezenas, "
@@ -44,28 +44,28 @@ PAGINAS = [
     dict(slug="duplasena", nome="Dupla Sena", cor="#A61324",
          aposta="6 a 15 dezenas de 1 a 50 · dois sorteios por concurso",
          descricao="Gerador estatístico, conferidor e bolão com rateio para a "
-                   "Dupla Sena. Ferramentas grátis do SorteLab.",
+                   "Dupla Sena. Ferramentas grátis do SorteLabs.",
          intro="A Dupla Sena dá duas chances por concurso: dois sorteios de 6 "
                "dezenas de 50. O histórico aqui usa o 1º sorteio; para "
                "conferir o 2º, é só digitar as dezenas dele no conferidor."),
     dict(slug="diadesorte", nome="Dia de Sorte", cor="#CB852B",
          aposta="7 a 15 dezenas de 1 a 31 + Mês da Sorte",
          descricao="Gerador estatístico, conferidor e bolão com rateio para o "
-                   "Dia de Sorte. Ferramentas grátis do SorteLab.",
+                   "Dia de Sorte. Ferramentas grátis do SorteLabs.",
          intro="O Dia de Sorte sorteia 7 dezenas de 31, mais o Mês da Sorte. "
                "Gere jogos com base no histórico e confira os seus — o mês "
                "você escolhe no volante, do seu jeito."),
     dict(slug="timemania", nome="Timemania", cor="#0E8A3E",
          aposta="10 dezenas fixas de 1 a 80 + Time do Coração",
          descricao="Gerador estatístico, conferidor e bolão com rateio para a "
-                   "Timemania. Ferramentas grátis do SorteLab.",
+                   "Timemania. Ferramentas grátis do SorteLabs.",
          intro="Na Timemania você marca 10 dezenas de 80 e o seu Time do "
                "Coração. Gere os números pela estatística — o time, claro, "
                "é questão de fé."),
     dict(slug="maismilionaria", nome="+Milionária", cor="#2E3078",
          aposta="6 a 12 dezenas de 1 a 50 + 2 trevos",
          descricao="Gerador estatístico, conferidor e bolão com rateio para a "
-                   "+Milionária. Ferramentas grátis do SorteLab.",
+                   "+Milionária. Ferramentas grátis do SorteLabs.",
          intro="A +Milionária sorteia 6 dezenas de 50 e 2 trevos de 6. As "
                "dezenas você gera aqui pela estatística; os trevos são "
                "marcados à parte no volante."),
@@ -76,11 +76,12 @@ TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{nome}: Gerador, Bolão com Rateio e Conferidor — SorteLab</title>
+<title>{nome}: Gerador, Bolão com Rateio e Conferidor — SorteLabs</title>
 <meta name="description" content="{descricao}">
-<meta property="og:title" content="{nome} — Gerador, Bolão e Conferidor | SorteLab">
+<meta property="og:title" content="{nome} — Gerador, Bolão e Conferidor | SorteLabs">
 <meta property="og:description" content="{descricao}">
 <meta property="og:type" content="website">
+<link rel="canonical" href="https://sortelabs.com.br/{slug}.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Rubik:wght@400;600;700&display=swap" rel="stylesheet">
@@ -92,7 +93,7 @@ TEMPLATE = """<!DOCTYPE html>
 
 <header class="topo">
   <div class="miolo">
-    <a class="marca" href="index.html"><span class="bolinha-logo">7</span>SorteLab</a>
+    <a class="marca" href="index.html"><span class="bolinha-logo">7</span>SorteLabs</a>
     <nav><a href="index.html">Todas as loterias</a></nav>
   </div>
 </header>
@@ -244,13 +245,13 @@ TEMPLATE = """<!DOCTYPE html>
 
 <footer class="rodape">
   <div class="miolo">
-    <div class="selo-honesto"><strong>O selo honesto do SorteLab:</strong>
+    <div class="selo-honesto"><strong>O selo honesto do SorteLabs:</strong>
     nenhuma estatística aumenta sua chance de ganhar — e quem prometer o
     contrário está te enganando. Nossas ferramentas organizam a brincadeira:
     jogos com perfil de sorteio real, bolão sem briga na hora do rateio e
     conferência sem dor de cabeça. Jogue por diversão e com moderação. Proibido
     para menores de 18 anos.</div>
-    <p>SorteLab — ferramentas gratuitas para loterias ·
+    <p>SorteLabs — ferramentas gratuitas para loterias ·
     <a href="index.html">todas as loterias</a> · dados oficiais da Caixa,
     atualizados todo dia após os sorteios. Este site não tem vínculo com a
     Caixa Econômica Federal e não vende apostas.</p>
@@ -307,12 +308,12 @@ def gerar():
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n'
                 '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
         for u in ["index.html"] + urls:
-            f.write(f"  <url><loc>https://vbaiao.github.io/sortelab/{u}"
+            f.write(f"  <url><loc>https://sortelabs.com.br/{u}"
                     f"</loc></url>\n")
         f.write("</urlset>\n")
     with open(os.path.join(RAIZ, "robots.txt"), "w", encoding="utf-8") as f:
         f.write("User-agent: *\nAllow: /\n"
-                "Sitemap: https://vbaiao.github.io/sortelab/sitemap.xml\n")
+                "Sitemap: https://sortelabs.com.br/sitemap.xml\n")
     print("OK sitemap.xml e robots.txt")
 
 

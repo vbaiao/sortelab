@@ -187,12 +187,13 @@
       (chance ? " · Chance do prêmio máximo: 1 em " + SL.inteiroBr(chance) : "");
     $("#bol-rateio").hidden = false;
 
-    const msg = "🍀 *Bolão " + cfg.nome + " — SorteLab*\n" +
+    const msg = "🍀 *Bolão " + cfg.nome + " — SorteLabs*\n" +
       jogosQtd + " jogo(s) de " + k + " dezenas\n\n" +
       textoJogos(jogos) + "\n\n" +
       "💰 Total: " + SL.dinheiro(valor) + "  |  👥 " + pessoas + " pessoa(s)\n" +
       "Cota por pessoa: " + SL.dinheiro(cota) + "\n" +
-      "Quem tá dentro? 🎉";
+      "Quem tá dentro? 🎉\n" +
+      "Confira depois em https://sortelabs.com.br/" + slug + ".html";
     const caixaMsg = $("#bol-msg");
     caixaMsg.textContent = msg;
     caixaMsg.hidden = false;

@@ -1,11 +1,11 @@
-# SorteLab
+# SorteLabs
 
 Ferramentas gratuitas e honestas para 8 loterias da Caixa: gerador
 estatístico, bolão com rateio pronto para o WhatsApp, conferidor de vários
 jogos de uma vez e planejador de orçamento.
 
 **A promessa honesta:** nenhuma estatística aumenta a chance de ganhar.
-O SorteLab organiza a brincadeira — não vende milagre.
+O SorteLabs organiza a brincadeira — não vende milagre.
 
 ## Como funciona
 
