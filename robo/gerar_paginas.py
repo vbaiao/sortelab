@@ -95,7 +95,7 @@ TEMPLATE = """<!DOCTYPE html>
 <header class="topo">
   <div class="miolo">
     <a class="marca" href="index.html"><span class="bolinha-logo">7</span>SorteLabs</a>
-    <nav><a href="index.html">Todas as loterias</a></nav>
+    <nav><a href="desafio.html">🎯 Desafio</a><a href="index.html">Todas as loterias</a></nav>
   </div>
 </header>
 
@@ -309,7 +309,7 @@ def gerar():
     with open(os.path.join(RAIZ, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n'
                 '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-        for u in ["index.html"] + urls:
+        for u in ["index.html", "desafio.html"] + urls:
             f.write(f"  <url><loc>https://sortelabs.com.br/{u}"
                     f"</loc></url>\n")
         f.write("</urlset>\n")

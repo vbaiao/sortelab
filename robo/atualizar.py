@@ -16,11 +16,52 @@ import time
 import urllib.request
 from datetime import datetime, timezone
 
+import campeao
 from loterias import API_BASE, LOTERIAS
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PASTA_DADOS = os.path.join(RAIZ, "dados")
+ARQ_DESAFIO = os.path.join(PASTA_DADOS, "desafio.json")
 MAX_POR_EXECUCAO = 120   # limite de concursos baixados por loteria por rodada
+
+
+def atualizar_desafio(slug, concursos):
+    """Desafio do Campeão: confere o palpite cravado contra os resultados
+    novos e crava o próximo. Determinístico e sem olhar o futuro."""
+    if os.path.exists(ARQ_DESAFIO):
+        with open(ARQ_DESAFIO, encoding="utf-8") as f:
+            desafio = json.load(f)
+    else:
+        desafio = {}
+    d = desafio.setdefault(slug, {"pendente": None, "historico": []})
+    indice = {c[0]: c for c in concursos}
+    mudou = False
+
+    while d["pendente"] and (d["pendente"]["apos"] + 1) in indice:
+        alvo = indice[d["pendente"]["apos"] + 1]
+        jogo = d["pendente"]["jogo"]
+        acertos = len(set(jogo) & set(alvo[2]))
+        d["historico"].append({"concurso": alvo[0], "data": alvo[1],
+                               "jogo": jogo, "resultado": alvo[2],
+                               "acertos": acertos})
+        corte = [c for c in concursos if c[0] <= alvo[0]]
+        d["pendente"] = {"apos": alvo[0],
+                         "jogo": campeao.jogo_campeao(slug, corte)}
+        print(f"  Desafio: concurso {alvo[0]} conferido — {acertos} acerto(s); "
+              f"novo palpite cravado.")
+        mudou = True
+
+    if not d["pendente"]:
+        d["pendente"] = {"apos": concursos[-1][0],
+                         "jogo": campeao.jogo_campeao(slug, concursos)}
+        print(f"  Desafio: primeiro palpite cravado (após concurso "
+              f"{concursos[-1][0]}).")
+        mudou = True
+
+    if mudou:
+        with open(ARQ_DESAFIO, "w", encoding="utf-8") as f:
+            json.dump(desafio, f, ensure_ascii=False, separators=(",", ":"))
+    return mudou
 
 
 def buscar(slug, numero=None, timeout=20):
@@ -100,6 +141,15 @@ def main():
             verificadas += 1
         if resultado:
             houve_novidade = True
+        caminho = os.path.join(PASTA_DADOS, f"{cfg['slug']}.json")
+        if os.path.exists(caminho):
+            with open(caminho, encoding="utf-8") as f:
+                concursos = json.load(f)["concursos"]
+            try:
+                if atualizar_desafio(cfg["slug"], concursos):
+                    houve_novidade = True
+            except Exception as erro:
+                print(f"{cfg['nome']}: desafio falhou ({erro}).")
     if verificadas == 0:
         print("Nenhuma loteria pôde ser verificada.")
         sys.exit(1)
