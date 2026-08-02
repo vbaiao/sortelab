@@ -307,12 +307,12 @@ def gerar():
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n'
                 '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
         for u in ["index.html"] + urls:
-            f.write(f"  <url><loc>https://SEU-USUARIO.github.io/sortelab/{u}"
+            f.write(f"  <url><loc>https://vbaiao.github.io/sortelab/{u}"
                     f"</loc></url>\n")
         f.write("</urlset>\n")
     with open(os.path.join(RAIZ, "robots.txt"), "w", encoding="utf-8") as f:
         f.write("User-agent: *\nAllow: /\n"
-                "Sitemap: https://SEU-USUARIO.github.io/sortelab/sitemap.xml\n")
+                "Sitemap: https://vbaiao.github.io/sortelab/sitemap.xml\n")
     print("OK sitemap.xml e robots.txt")
 
 
