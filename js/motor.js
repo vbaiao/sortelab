@@ -311,6 +311,16 @@
     return [...dezenas].sort((a, b) => a - b);
   }
 
+  /* Selo do prêmio para exibir AO LADO do número de acertos: tira do rótulo
+     o "N acertos/pontos" que repetiria o número já mostrado, mas preserva
+     nomes de faixa ("Quadra", "Quina") e avisos ("TAMBÉM PAGA!"). */
+  function seloPremio(cfg, acertos) {
+    const bruto = cfg.premios[acertos];
+    if (!bruto) return "";
+    const limpo = bruto.replace(/^\d+\s*(acertos?|pontos?)!*\s*(—\s*)?/i, "").trim();
+    return limpo || bruto;
+  }
+
   function conferirJogos(cfg, resultado, jogos) {
     const alvo = new Set(resultado);
     return jogos.map(jogo => {
@@ -330,6 +340,6 @@
     comb, dinheiro, inteiroBr, dez,
     calcularEstatisticas, jogoValido, perfilEsperado, gerarJogos, jogoCampeao,
     custoAposta, combinacoesCobertas, totalCombinacoes, chanceUmEm,
-    lerLinhaJogo, conferirJogos, faixaDe
+    lerLinhaJogo, conferirJogos, seloPremio, faixaDe
   };
 })();

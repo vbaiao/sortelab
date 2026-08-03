@@ -164,12 +164,12 @@
         const alvo = new Set(h.resultado);
         const certas = h.jogo.filter(n => alvo.has(n));
         const tr = document.createElement("tr");
-        const premio = cfg.premios[h.acertos];
+        const selo = SL.seloPremio(cfg, h.acertos);
         tr.innerHTML =
           "<td>" + h.concurso + (h.retro ? "<span class='tag-retro'>retro</span>" : "") + "</td>" +
           "<td>" + h.data + "</td>" +
           "<td class='num-acertos'>" + h.acertos +
-            (premio ? " <span class='premio'>" + premio + "</span>" : "") + "</td>" +
+            (selo ? " <span class='premio'>" + selo + "</span>" : "") + "</td>" +
           "<td>" + (certas.length ? certas.map(SL.dez).join(" - ") : "—") + "</td>";
         tb.appendChild(tr);
       });

@@ -402,7 +402,7 @@
         premiados++;
         const selo = document.createElement("span");
         selo.className = "premio";
-        selo.textContent = c.premio;
+        selo.textContent = SL.seloPremio(cfg, c.acertos.length);
         linha.appendChild(selo);
       }
       saida.appendChild(linha);
