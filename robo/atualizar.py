@@ -17,6 +17,7 @@ import urllib.request
 from datetime import datetime, timezone
 
 import campeao
+import exportar_csv
 from loterias import API_BASE, LOTERIAS
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -150,6 +151,12 @@ def main():
                     houve_novidade = True
             except Exception as erro:
                 print(f"{cfg['nome']}: desafio falhou ({erro}).")
+            try:
+                if exportar_csv.exportar(cfg["slug"], concursos):
+                    print(f"  CSV de download atualizado.")
+                    houve_novidade = True
+            except Exception as erro:
+                print(f"{cfg['nome']}: exportação CSV falhou ({erro}).")
     if verificadas == 0:
         print("Nenhuma loteria pôde ser verificada.")
         sys.exit(1)
