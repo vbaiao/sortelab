@@ -127,15 +127,36 @@
       const qtd = Math.min(100, Math.max(1, parseInt($("#ger-qtd").value, 10) || 1));
       jogos = SL.gerarJogos(cfg, stats, qtd, cfg.apostaMin);
     }
+
+    const perfil = SL.perfilEsperado(cfg, cfg.apostaMin);
     jogos.forEach((j, i) => {
       const soma = j.reduce((a, b) => a + b, 0);
       const pares = j.filter(n => n % 2 === 0).length;
-      saida.appendChild(linhaJogo("Jogo " + (i + 1), j, "soma " + soma + " · " + pares + " pares"));
+      saida.appendChild(linhaJogo("Jogo " + (i + 1), j,
+        "soma " + soma + " · " + pares + " pares · ✓ dentro do padrão"));
     });
+
+    const legenda = document.createElement("p");
+    legenda.className = "dica";
+    legenda.style.margin = "12px 0 0";
+    legenda.innerHTML = "<strong>O que são esses números:</strong> a " +
+      "<em>soma</em> é o total das dezenas do jogo e os <em>pares</em> são " +
+      "quantas delas são números pares. Servem para você conferir que o jogo " +
+      "tem a cara de um sorteio real: na " + cfg.nome + ", a soma costuma cair " +
+      "entre <strong>" + perfil.somaMin + " e " + perfil.somaMax + "</strong> " +
+      "(média " + perfil.somaMedia + ") e os pares entre <strong>" +
+      perfil.paresMin + " e " + perfil.paresMax + "</strong>. Todo jogo gerado " +
+      "aqui já passou por esse filtro — por isso o ✓. " +
+      "<em>Nem soma nem pares mudam sua chance de ganhar</em>: eles só evitam " +
+      "combinações de cara estranha, como dezenas em sequência, que muita " +
+      "gente joga e dividiriam o prêmio com mais pessoas.";
+    saida.appendChild(legenda);
+
     const custo = jogos.length * cfg.preco;
     resumo.innerHTML = (campeao
-      ? "<strong>Jogo campeão:</strong> o único jogo “nota máxima” do ranking " +
-        "de score. É sempre o mesmo até sair um novo concurso. "
+      ? "<strong>Este é o jogo campeão:</strong> entre todas as combinações " +
+        "possíveis, é a de maior pontuação no nosso score — e continuará sendo " +
+        "exatamente esta até sair o próximo concurso. "
       : "") +
       "Custo na lotérica: <strong>" + SL.dinheiro(custo) + "</strong>" +
       (jogos.length > 1 ? " (" + jogos.length + " × " + SL.dinheiro(cfg.preco) + ")" : "") + ".";

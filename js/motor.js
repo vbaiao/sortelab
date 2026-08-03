@@ -143,19 +143,33 @@
     return Math.floor((n - cfg.lo) / parametrosFaixa(cfg).tamanho);
   }
 
-  function jogoValido(cfg, jogo) {
-    const k = jogo.length;
+  /* Faixa de soma típica e faixa de pares aceita para um jogo de k dezenas —
+     as mesmas usadas pelo filtro de perfil, expostas para a interface poder
+     explicar os números ao usuário. */
+  function perfilEsperado(cfg, k) {
     const quantidade = cfg.hi - cfg.lo + 1;
-
     const media = k * (cfg.lo + cfg.hi) / 2;
     const variancia = (quantidade * quantidade - 1) / 12;
     const desvio = Math.sqrt(k * variancia * (quantidade - k) / (quantidade - 1));
+    const meio = Math.floor(k / 2);
+    return {
+      somaMedia: Math.round(media),
+      somaMin: Math.ceil(media - 1.2 * desvio),
+      somaMax: Math.floor(media + 1.2 * desvio),
+      paresMin: Math.max(0, meio - 1),
+      paresMax: Math.min(k, meio + 2)
+    };
+  }
+
+  function jogoValido(cfg, jogo) {
+    const k = jogo.length;
+    const p = perfilEsperado(cfg, k);
+
     const soma = jogo.reduce((a, b) => a + b, 0);
-    if (soma < media - 1.2 * desvio || soma > media + 1.2 * desvio) return false;
+    if (soma < p.somaMin || soma > p.somaMax) return false;
 
     const pares = jogo.filter(n => n % 2 === 0).length;
-    const meio = Math.floor(k / 2);
-    if (pares < meio - 1 || pares > meio + 2) return false;
+    if (pares < p.paresMin || pares > p.paresMax) return false;
 
     const { numFaixas } = parametrosFaixa(cfg);
     const porFaixa = {};
@@ -314,7 +328,7 @@
   raiz.SorteLab = {
     LOTERIAS, JANELA_RECENTE,
     comb, dinheiro, inteiroBr, dez,
-    calcularEstatisticas, jogoValido, gerarJogos, jogoCampeao,
+    calcularEstatisticas, jogoValido, perfilEsperado, gerarJogos, jogoCampeao,
     custoAposta, combinacoesCobertas, totalCombinacoes, chanceUmEm,
     lerLinhaJogo, conferirJogos, faixaDe
   };

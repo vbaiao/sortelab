@@ -52,9 +52,11 @@
   <section class="ferramenta" id="gerador">
     <div class="cartao">
       <h2>Gerar jogos</h2>
-      <p class="dica">Sorteio ponderado: dezenas com melhor score no histórico
-      têm mais chance de entrar, e todo jogo respeita o perfil típico dos
-      sorteios (soma, pares/ímpares e espalhamento).</p>
+      <p class="dica">Cada dezena recebe uma nota (o <em>score</em>): 50% da
+      frequência em todo o histórico, 35% da frequência nos últimos 200
+      concursos e 15% do atraso, que é há quantos concursos ela não sai. As
+      dezenas com nota melhor entram com mais facilidade no sorteio dos seus
+      jogos — mas há aleatoriedade, então cada clique traz jogos diferentes.</p>
       <form id="form-gerador">
         <div class="linha-campos">
           <div class="campo">
@@ -68,6 +70,13 @@
           <button class="botao secundario" type="button" id="btn-copiar-jogos" hidden>Copiar jogos</button>
         </div>
       </form>
+      <p class="dica" style="margin:12px 0 0">
+      <strong>Jogo campeão:</strong> em vez de sortear, ele testa as
+      combinações das dezenas mais bem pontuadas e devolve a de maior nota
+      total — um único jogo, sempre o mesmo, até sair um novo concurso e as
+      notas mudarem. É o palpite que usamos no
+      <a href="desafio.html">Desafio do Campeão</a>, onde registramos em
+      público quantos acertos ele faz a cada sorteio.</p>
       <div id="ger-saida"></div>
       <div class="caixa-resumo" id="ger-resumo" hidden></div>
       
