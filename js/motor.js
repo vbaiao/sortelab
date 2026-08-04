@@ -13,58 +13,55 @@
     megasena: {
       slug: "megasena", nome: "Mega-Sena", lo: 1, hi: 60, sorteadas: 6,
       apostaMin: 6, apostaMax: 20, preco: 6.00, precoFixo: false,
-      premios: { 4: "Quadra 🎉", 5: "Quina 🎉🎉", 6: "SENA!!! 💰💰💰" },
+      premios: { 4: "Quadra", 5: "Quina", 6: "Sena" },
       obs: ""
     },
     lotofacil: {
       slug: "lotofacil", nome: "Lotofácil", lo: 1, hi: 25, sorteadas: 15,
       apostaMin: 15, apostaMax: 20, preco: 3.50, precoFixo: false,
-      premios: { 11: "11 pontos 🎉", 12: "12 pontos 🎉", 13: "13 pontos 🎉🎉",
-                 14: "14 pontos 💰", 15: "15 PONTOS!!! 💰💰💰" },
+      premios: { 11: "Premiado", 12: "Premiado", 13: "Premiado",
+                 14: "Premiado", 15: "Prêmio máximo" },
       obs: ""
     },
     quina: {
       slug: "quina", nome: "Quina", lo: 1, hi: 80, sorteadas: 5,
       apostaMin: 5, apostaMax: 15, preco: 3.00, precoFixo: false,
-      premios: { 2: "Duque 🎉", 3: "Terno 🎉🎉", 4: "Quadra 💰",
-                 5: "QUINA!!! 💰💰💰" },
+      premios: { 2: "Duque", 3: "Terno", 4: "Quadra", 5: "Quina" },
       obs: ""
     },
     lotomania: {
       slug: "lotomania", nome: "Lotomania", lo: 0, hi: 99, sorteadas: 20,
       apostaMin: 50, apostaMax: 50, preco: 3.50, precoFixo: true,
-      premios: { 0: "0 acertos — TAMBÉM PAGA! 💰", 15: "15 pontos 🎉",
-                 16: "16 pontos 🎉", 17: "17 pontos 🎉🎉", 18: "18 pontos 💰",
-                 19: "19 pontos 💰💰", 20: "20 PONTOS!!! 💰💰💰" },
+      premios: { 0: "Zero acertos paga", 15: "Premiado", 16: "Premiado",
+                 17: "Premiado", 18: "Premiado", 19: "Premiado",
+                 20: "Prêmio máximo" },
       obs: ""
     },
     duplasena: {
       slug: "duplasena", nome: "Dupla Sena", lo: 1, hi: 50, sorteadas: 6,
       apostaMin: 6, apostaMax: 15, preco: 3.00, precoFixo: false,
-      premios: { 3: "Terno 🎉", 4: "Quadra 🎉🎉", 5: "Quina 💰",
-                 6: "SENA!!! 💰💰💰" },
+      premios: { 3: "Terno", 4: "Quadra", 5: "Quina", 6: "Sena" },
       obs: "O histórico usa o 1º sorteio de cada concurso. Para conferir o " +
            "2º sorteio, confira de novo digitando as dezenas dele."
     },
     diadesorte: {
       slug: "diadesorte", nome: "Dia de Sorte", lo: 1, hi: 31, sorteadas: 7,
       apostaMin: 7, apostaMax: 15, preco: 3.00, precoFixo: false,
-      premios: { 4: "4 acertos 🎉", 5: "5 acertos 🎉🎉", 6: "6 acertos 💰",
-                 7: "7 ACERTOS!!! 💰💰💰" },
+      premios: { 4: "Premiado", 5: "Premiado", 6: "Premiado", 7: "Prêmio máximo" },
       obs: "O “Mês da Sorte” é marcado à parte no volante (não entra no " +
            "histórico de dezenas)."
     },
     timemania: {
       slug: "timemania", nome: "Timemania", lo: 1, hi: 80, sorteadas: 7,
       apostaMin: 10, apostaMax: 10, preco: 3.50, precoFixo: true,
-      premios: { 3: "3 acertos 🎉", 4: "4 acertos 🎉", 5: "5 acertos 🎉🎉",
-                 6: "6 acertos 💰", 7: "7 ACERTOS!!! 💰💰💰" },
+      premios: { 3: "Premiado", 4: "Premiado", 5: "Premiado",
+                 6: "Premiado", 7: "Prêmio máximo" },
       obs: "O “Time do Coração” é marcado à parte no volante."
     },
     maismilionaria: {
       slug: "maismilionaria", nome: "+Milionária", lo: 1, hi: 50, sorteadas: 6,
       apostaMin: 6, apostaMax: 12, preco: 6.00, precoFixo: false,
-      premios: { 4: "4 acertos 🎉", 5: "5 acertos 💰", 6: "6 ACERTOS!!! 💰💰💰" },
+      premios: { 4: "Premiado", 5: "Premiado", 6: "Prêmio máximo" },
       obs: "Os 2 trevos (1 a 6) são marcados à parte; o prêmio máximo exige " +
            "acertá-los também."
     }
@@ -315,10 +312,7 @@
      o "N acertos/pontos" que repetiria o número já mostrado, mas preserva
      nomes de faixa ("Quadra", "Quina") e avisos ("TAMBÉM PAGA!"). */
   function seloPremio(cfg, acertos) {
-    const bruto = cfg.premios[acertos];
-    if (!bruto) return "";
-    const limpo = bruto.replace(/^\d+\s*(acertos?|pontos?)!*\s*(—\s*)?/i, "").trim();
-    return limpo || bruto;
+    return cfg.premios[acertos] || "";
   }
 
   function conferirJogos(cfg, resultado, jogos) {

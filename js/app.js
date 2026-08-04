@@ -12,10 +12,10 @@
 
   // ---------------------------------------------------------- helpers de UI
 
-  function bolas(nums, marcados, mini) {
+  function bolas(nums, marcados, mini, animar) {
     const marca = marcados || new Set();
     const div = document.createElement("div");
-    div.className = "bolas";
+    div.className = "bolas" + (animar ? " anima" : "");
     nums.forEach(n => {
       const b = document.createElement("span");
       b.className = "bola" + (marca.has(n) ? " acerto" : "") + (mini ? " mini" : "");
@@ -25,14 +25,14 @@
     return div;
   }
 
-  function linhaJogo(rotuloTexto, jogo, extras) {
+  function linhaJogo(rotuloTexto, jogo, extras, animar) {
     const linha = document.createElement("div");
     linha.className = "jogo-gerado";
     const rotulo = document.createElement("span");
     rotulo.className = "num";
     rotulo.textContent = rotuloTexto;
     linha.appendChild(rotulo);
-    linha.appendChild(bolas(jogo, null, jogo.length > 10));
+    linha.appendChild(bolas(jogo, null, jogo.length > 10, animar));
     if (extras) {
       const info = document.createElement("span");
       info.className = "info";
@@ -133,7 +133,7 @@
       const soma = j.reduce((a, b) => a + b, 0);
       const pares = j.filter(n => n % 2 === 0).length;
       saida.appendChild(linhaJogo("Jogo " + (i + 1), j,
-        "soma " + soma + " · " + pares + " pares · ✓ dentro do padrão"));
+        "soma " + soma + " · " + pares + " pares · perfil típico", true));
     });
 
     const legenda = document.createElement("p");
@@ -146,7 +146,7 @@
       "entre <strong>" + perfil.somaMin + " e " + perfil.somaMax + "</strong> " +
       "(média " + perfil.somaMedia + ") e os pares entre <strong>" +
       perfil.paresMin + " e " + perfil.paresMax + "</strong>. Todo jogo gerado " +
-      "aqui já passou por esse filtro — por isso o ✓. " +
+      "aqui já passou por esse filtro. " +
       "<em>Nem soma nem pares mudam sua chance de ganhar</em>: eles só evitam " +
       "combinações de cara estranha, como dezenas em sequência, que muita " +
       "gente joga e dividiriam o prêmio com mais pessoas.";
@@ -168,7 +168,7 @@
   function copiar(texto, botao) {
     navigator.clipboard.writeText(texto).then(() => {
       const original = botao.textContent;
-      botao.textContent = "Copiado ✔";
+      botao.textContent = "Copiado";
       setTimeout(() => { botao.textContent = original; }, 1600);
     });
   }
@@ -197,7 +197,7 @@
     const jogos = SL.gerarJogos(cfg, stats, jogosQtd, k);
     const saida = $("#bol-saida");
     limpar(saida);
-    jogos.forEach((j, i) => saida.appendChild(linhaJogo("Jogo " + (i + 1), j, "")));
+    jogos.forEach((j, i) => saida.appendChild(linhaJogo("Jogo " + (i + 1), j, "", true)));
 
     const cota = valor / pessoas;
     const chance = SL.chanceUmEm(cfg, k, jogosQtd);
@@ -208,12 +208,12 @@
       (chance ? " · Chance do prêmio máximo: 1 em " + SL.inteiroBr(chance) : "");
     $("#bol-rateio").hidden = false;
 
-    const msg = "🍀 *Bolão " + cfg.nome + " — SorteLabs*\n" +
+    const msg = "*Bolão " + cfg.nome + " — SorteLabs*\n" +
       jogosQtd + " jogo(s) de " + k + " dezenas\n\n" +
       textoJogos(jogos) + "\n\n" +
-      "💰 Total: " + SL.dinheiro(valor) + "  |  👥 " + pessoas + " pessoa(s)\n" +
+      "Total: " + SL.dinheiro(valor) + "  |  " + pessoas + " pessoa(s)\n" +
       "Cota por pessoa: " + SL.dinheiro(cota) + "\n" +
-      "Quem tá dentro? 🎉\n" +
+      "Quem tá dentro?\n" +
       "Confira depois em https://sortelabs.com.br/" + slug + ".html";
     const caixaMsg = $("#bol-msg");
     caixaMsg.textContent = msg;
@@ -259,7 +259,7 @@
     }
     if (!opcoes.length) {
       mostrarErro(erro, "Com " + SL.dinheiro(valor) + " não dá para a aposta mínima da " +
-        cfg.nome + " (" + SL.dinheiro(SL.custoAposta(cfg, cfg.apostaMin)) + "). Junte mais gente! 😅");
+        cfg.nome + " (" + SL.dinheiro(SL.custoAposta(cfg, cfg.apostaMin)) + "). Junte mais gente.");
       return;
     }
     mostrarErro(erro, "");
@@ -325,7 +325,7 @@
       nota.textContent = op.maxJogos + " jogos é muita coisa — gerei os primeiros 100.";
       saida.appendChild(nota);
     }
-    jogos.forEach((j, i) => saida.appendChild(linhaJogo("Jogo " + (i + 1), j, "")));
+    jogos.forEach((j, i) => saida.appendChild(linhaJogo("Jogo " + (i + 1), j, "", true)));
     const resumo = document.createElement("div");
     resumo.className = "caixa-resumo";
     resumo.innerHTML = "Gasto: <strong>" + SL.dinheiro(op.gasto) + "</strong> " +
@@ -389,7 +389,7 @@
     rotulo.className = "num";
     rotulo.textContent = "Sorteio";
     cabecalho.appendChild(rotulo);
-    cabecalho.appendChild(bolas(resultado, alvo, resultado.length > 10));
+    cabecalho.appendChild(bolas(resultado, alvo, resultado.length > 10, true));
     saida.appendChild(cabecalho);
 
     const conferidos = SL.conferirJogos(cfg, resultado, jogos);
@@ -397,7 +397,7 @@
     conferidos.forEach((c, i) => {
       const linha = linhaJogo("Jogo " + (i + 1), [],
         c.acertos.length + " acerto(s)");
-      linha.querySelector(".bolas").replaceWith(bolas(c.jogo, alvo, c.jogo.length > 10));
+      linha.querySelector(".bolas").replaceWith(bolas(c.jogo, alvo, c.jogo.length > 10, true));
       if (c.premio) {
         premiados++;
         const selo = document.createElement("span");
@@ -411,7 +411,7 @@
     const resumo = document.createElement("div");
     resumo.className = "caixa-resumo";
     resumo.innerHTML = "<strong>" + jogos.length + " jogo(s) conferido(s).</strong> " +
-      (premiados ? premiados + " premiado(s) — PARABÉNS! 🎉"
+      (premiados ? premiados + " jogo(s) premiado(s)."
                  : "Nenhum premiado desta vez.") +
       (ignoradas.length ? "<br>" + ignoradas.length +
         " linha(s) ignorada(s) por não parecerem um jogo." : "");

@@ -12,103 +12,125 @@
 <link rel="canonical" href="https://sortelabs.com.br/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Rubik:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/estilo.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23C99011'/><text x='50' y='66' font-size='48' text-anchor='middle' font-family='Arial Black'>7</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230A0D12'/><rect x='18' y='18' width='26' height='26' rx='6' fill='%23CF9F3F'/><rect x='56' y='18' width='26' height='26' rx='6' fill='%23222A35'/><rect x='18' y='56' width='26' height='26' rx='6' fill='%23222A35'/><rect x='56' y='56' width='26' height='26' rx='6' fill='%23CF9F3F'/></svg>">
 </head>
 <body>
 
 <header class="topo">
   <div class="miolo">
-    <a class="marca" href="index.html"><span class="bolinha-logo">7</span>SorteLabs</a>
-    <nav><a href="#loterias">Loterias</a></nav>
+    <a class="marca" href="index.html"><span class="sorte">Sorte</span><span class="labs">Labs</span></a>
+    <nav>
+      <a href="desafio.html">Desafio</a>
+      <a href="#loterias">Loterias</a>
+    </nav>
   </div>
 </header>
 
-<main class="miolo">
-  <section class="heroi">
-    <h1>O laboratório <em>honesto</em> da sua sorte.</h1>
-    <p>Gerador estatístico, bolão com rateio pronto para o WhatsApp,
-    conferidor de vários jogos de uma vez e planejador de orçamento — para 8
-    loterias da Caixa, de graça. E com a única promessa que dá para cumprir:
-    <strong>nada aumenta sua chance de ganhar</strong>. A gente só deixa a
-    brincadeira mais organizada.</p>
-  </section>
+<section class="heroi">
+  <div class="volante" aria-hidden="true"></div>
+  <div class="miolo">
+    <h1>Ferramentas de loteria que <em>não mentem</em> para você.</h1>
+    <p>Gere jogos com critério estatístico, monte o bolão com o rateio pronto
+    para o grupo e confira dezenas de jogos de uma vez. Oito loterias da Caixa,
+    de graça e sem cadastro — com a única promessa que dá para cumprir:
+    <strong>nada aumenta sua chance de ganhar</strong>.</p>
+    <div class="heroi-acoes">
+      <a class="botao-claro" href="#loterias">Escolher minha loteria</a>
+      <a class="botao-vazado" href="desafio.html">Ver o Desafio do Campeão</a>
+    </div>
+  </div>
+</section>
 
-  <section id="loterias">
-    <div class="grade-loterias">
-      <a class="card-loteria" style="background:#209869" href="megasena.html">
+<main>
+  <section class="secao miolo" id="loterias">
+    <span class="rotulo-secao">Escolha o jogo</span>
+    <h2>Oito loterias, as mesmas cinco ferramentas.</h2>
+    <div class="grade-loterias revelar">
+      <a class="card-loteria" style="--cor:#209869" href="megasena.html">
         <strong>Mega-Sena</strong><span>6 dezenas de 60</span></a>
-      <a class="card-loteria" style="background:#930089" href="lotofacil.html">
+      <a class="card-loteria" style="--cor:#930089" href="lotofacil.html">
         <strong>Lotofácil</strong><span>15 dezenas de 25</span></a>
-      <a class="card-loteria" style="background:#260085" href="quina.html">
+      <a class="card-loteria" style="--cor:#260085" href="quina.html">
         <strong>Quina</strong><span>5 dezenas de 80</span></a>
-      <a class="card-loteria" style="background:#E07000" href="lotomania.html">
-        <strong>Lotomania</strong><span>50 dezenas · 0 acerto paga</span></a>
-      <a class="card-loteria" style="background:#A61324" href="duplasena.html">
+      <a class="card-loteria" style="--cor:#E07000" href="lotomania.html">
+        <strong>Lotomania</strong><span>50 dezenas de 100</span></a>
+      <a class="card-loteria" style="--cor:#A61324" href="duplasena.html">
         <strong>Dupla Sena</strong><span>2 sorteios por concurso</span></a>
-      <a class="card-loteria" style="background:#CB852B" href="diadesorte.html">
-        <strong>Dia de Sorte</strong><span>7 dezenas + Mês da Sorte</span></a>
-      <a class="card-loteria" style="background:#0E8A3E" href="timemania.html">
-        <strong>Timemania</strong><span>10 dezenas + Time do Coração</span></a>
-      <a class="card-loteria" style="background:#2E3078" href="maismilionaria.html">
-        <strong>+Milionária</strong><span>6 dezenas + 2 trevos</span></a>
+      <a class="card-loteria" style="--cor:#CB852B" href="diadesorte.html">
+        <strong>Dia de Sorte</strong><span>7 dezenas e o mês</span></a>
+      <a class="card-loteria" style="--cor:#0E8A3E" href="timemania.html">
+        <strong>Timemania</strong><span>10 dezenas e o time</span></a>
+      <a class="card-loteria" style="--cor:#2E3078" href="maismilionaria.html">
+        <strong>+Milionária</strong><span>6 dezenas e 2 trevos</span></a>
     </div>
   </section>
 
-  <section class="cartao" style="margin-bottom:16px; border-left:4px solid var(--dourado)">
-    <h2>🎯 O Desafio do Campeão</h2>
-    <p class="dica" style="margin-bottom:10px">Antes de cada sorteio, nosso
-    robô crava o melhor jogo estatístico possível — e registra em público
-    quantos acertos fez. É o nosso experimento honesto ao vivo: veja com os
-    próprios olhos se a estatística ganha do acaso.</p>
-    <a class="botao" href="desafio.html" style="text-decoration:none; display:inline-block">Acompanhar o desafio</a>
+  <section class="secao miolo">
+    <span class="rotulo-secao">O experimento</span>
+    <h2>A gente aposta contra a própria ferramenta.</h2>
+    <div class="cartao destaque revelar">
+      <p class="dica">Antes de cada sorteio, o robô do SorteLabs crava o melhor
+      jogo que a estatística consegue montar e deixa registrado em público.
+      Quando o resultado sai, ele mesmo confere e publica quantos acertou —
+      acerto ou vexame, fica tudo lá.</p>
+      <p class="dica">Até agora o placar confirma o que a matemática já dizia:
+      o jogo campeão acerta tanto quanto um jogo aleatório. É por isso que a
+      gente diz que nenhuma estatística aumenta sua chance — e mostra a conta.</p>
+      <a class="botao" href="desafio.html" style="margin-top:4px">Acompanhar o desafio</a>
+    </div>
   </section>
 
-  <section class="cartao" style="margin-bottom:30px">
-    <h2>Como o SorteLabs escolhe os números?</h2>
-    <p class="dica" style="margin-bottom:8px">Cada dezena recebe um score:
-    50% da frequência em todo o histórico, 35% da frequência nos últimos 200
-    concursos e 15% do atraso (concursos sem sair). Os jogos são sorteados com
-    peso nesse score e só passam se tiverem o perfil dos sorteios reais — soma
-    típica, pares e ímpares equilibrados, dezenas espalhadas pelo volante.</p>
-    <p class="dica" style="margin-bottom:0">Isso muda a chance? <strong>Não
-    muda</strong> — e testamos: no nosso backtest, jogos da estatística e
-    jogos aleatórios empatam, como a matemática manda. É diversão com método,
-    não promessa de riqueza.</p>
+  <section class="secao miolo">
+    <span class="rotulo-secao">Como funciona</span>
+    <h2>Critério no lugar de superstição.</h2>
+    <div class="cartao revelar">
+      <p class="dica">Cada dezena recebe uma nota, formada por três medidas do
+      histórico completo: quanto ela saiu em toda a série (50%), quanto saiu nos
+      últimos 200 concursos (35%) e há quanto tempo não aparece (15%). As mais
+      bem pontuadas entram com mais facilidade nos jogos que você gera.</p>
+      <p class="dica" style="margin-bottom:0">Todo jogo ainda passa por um
+      filtro de perfil: soma dentro da faixa típica daquela loteria, pares e
+      ímpares equilibrados e dezenas espalhadas pelo volante. Isso não muda sua
+      chance — evita apenas combinações que muita gente joga, do tipo que
+      dividiria o prêmio com meio Brasil.</p>
+    </div>
   </section>
 
-  <section class="cartao" style="margin-bottom:30px">
-    <h2>Dados abertos</h2>
-    <p class="dica" style="margin-bottom:10px">O histórico completo de cada
-    loteria fica disponível para download, atualizado junto com o site. O CSV
-    abre direto no Excel, com uma dezena por coluna; o JSON serve para quem
-    programa. Sem cadastro, sem pegadinha — são dados públicos da Caixa.</p>
-    <p class="dica" style="margin-bottom:0">
-      <a href="dados/csv/megasena.csv" download>Mega-Sena</a> ·
-      <a href="dados/csv/lotofacil.csv" download>Lotofácil</a> ·
-      <a href="dados/csv/quina.csv" download>Quina</a> ·
-      <a href="dados/csv/lotomania.csv" download>Lotomania</a> ·
-      <a href="dados/csv/duplasena.csv" download>Dupla Sena</a> ·
-      <a href="dados/csv/diadesorte.csv" download>Dia de Sorte</a> ·
-      <a href="dados/csv/timemania.csv" download>Timemania</a> ·
-      <a href="dados/csv/maismilionaria.csv" download>+Milionária</a>
-    </p>
+  <section class="secao miolo" style="padding-bottom:20px">
+    <span class="rotulo-secao">Dados abertos</span>
+    <h2>O histórico completo é seu também.</h2>
+    <div class="cartao revelar">
+      <p class="dica">Todos os concursos de cada loteria, desde o primeiro
+      sorteio, atualizados junto com o site. O CSV abre direto no Excel, com uma
+      dezena por coluna; o JSON serve para quem programa. Sem cadastro.</p>
+      <p class="dica" style="margin-bottom:0">
+        <a href="dados/csv/megasena.csv" download>Mega-Sena</a> ·
+        <a href="dados/csv/lotofacil.csv" download>Lotofácil</a> ·
+        <a href="dados/csv/quina.csv" download>Quina</a> ·
+        <a href="dados/csv/lotomania.csv" download>Lotomania</a> ·
+        <a href="dados/csv/duplasena.csv" download>Dupla Sena</a> ·
+        <a href="dados/csv/diadesorte.csv" download>Dia de Sorte</a> ·
+        <a href="dados/csv/timemania.csv" download>Timemania</a> ·
+        <a href="dados/csv/maismilionaria.csv" download>+Milionária</a>
+      </p>
+    </div>
   </section>
 </main>
 
 <footer class="rodape">
   <div class="miolo">
-    <div class="selo-honesto"><strong>O selo honesto do SorteLabs:</strong>
-    nenhuma estatística aumenta sua chance de ganhar — e quem prometer o
+    <div class="selo-honesto"><strong>O selo honesto do SorteLabs.</strong>
+    Nenhuma estatística aumenta sua chance de ganhar — e quem prometer o
     contrário está te enganando. Jogue por diversão e com moderação. Proibido
     para menores de 18 anos.</div>
-    <p>SorteLabs — dados oficiais da Caixa, atualizados todo dia após os
-    sorteios. Este site não tem vínculo com a Caixa Econômica Federal e não
-    vende apostas.</p>
+    <p>SorteLabs — dados oficiais da Caixa, atualizados de hora em hora. Este
+    site não tem vínculo com a Caixa Econômica Federal e não vende apostas.</p>
   </div>
 </footer>
 
+<script src="js/interface.js"></script>
 <script data-goatcounter="https://sortelabs.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

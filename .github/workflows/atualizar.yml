@@ -2,9 +2,13 @@ name: Atualizar resultados das loterias
 
 on:
   schedule:
-    # De hora em hora, no minuto 30 (horário UTC). Quando não há concurso
-    # novo, o robô só confere e encerra — não custa nada.
-    - cron: "30 * * * *"
+    # Duas vezes por hora, em minutos "quebrados" de propósito: o GitHub
+    # enfileira os agendamentos de todo mundo e costuma atrasar ou descartar
+    # execuções nos minutos redondos (:00 e :30), que são os mais disputados.
+    # Duas tentativas por hora também cobrem a hora do sorteio mesmo que uma
+    # delas seja descartada.
+    - cron: "7 * * * *"
+    - cron: "37 * * * *"
   workflow_dispatch: {}   # permite rodar manualmente pelo site do GitHub
 
 permissions:

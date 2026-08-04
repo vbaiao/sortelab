@@ -12,17 +12,17 @@
 <link rel="canonical" href="https://sortelabs.com.br/lotomania.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Rubik:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/estilo.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23C99011'/><text x='50' y='66' font-size='48' text-anchor='middle' font-family='Arial Black'>7</text></svg>">
-<style>:root { --cor: #E07000; --cor-suave: #E0700014; }</style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230A0D12'/><rect x='18' y='18' width='26' height='26' rx='6' fill='%23CF9F3F'/><rect x='56' y='18' width='26' height='26' rx='6' fill='%23222A35'/><rect x='18' y='56' width='26' height='26' rx='6' fill='%23222A35'/><rect x='56' y='56' width='26' height='26' rx='6' fill='%23CF9F3F'/></svg>">
+<style>:root { --cor: #E07000; }</style>
 </head>
 <body>
 
 <header class="topo">
   <div class="miolo">
-    <a class="marca" href="index.html"><span class="bolinha-logo">7</span>SorteLabs</a>
-    <nav><a href="desafio.html">🎯 Desafio</a><a href="index.html">Todas as loterias</a></nav>
+    <a class="marca" href="index.html"><span class="sorte">Sorte</span><span class="labs">Labs</span></a>
+    <nav><a href="desafio.html">Desafio</a><a href="index.html">Todas as loterias</a></nav>
   </div>
 </header>
 
@@ -36,11 +36,11 @@
 
 <nav class="abas" aria-label="Ferramentas">
   <div class="miolo">
-    <button class="aba" data-alvo="gerador" aria-selected="true">🎲 Gerador</button>
-    <button class="aba" data-alvo="bolao" aria-selected="false">👥 Bolão</button>
-    <button class="aba" data-alvo="orcamento" aria-selected="false">💰 Orçamento</button>
-    <button class="aba" data-alvo="conferidor" aria-selected="false">✅ Conferidor</button>
-    <button class="aba" data-alvo="estatisticas" aria-selected="false">📊 Estatísticas</button>
+    <button class="aba" data-alvo="gerador" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.7 4.8L18.5 9.5 13.7 11.2 12 16l-1.7-4.8L5.5 9.5l4.8-1.7z"/><path d="M18 15l.7 1.8 1.8.7-1.8.7L18 20l-.7-1.8-1.8-.7 1.8-.7z"/></svg><span>Gerador</span></button>
+    <button class="aba" data-alvo="bolao" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M16.5 5.4a3.2 3.2 0 0 1 0 6.2"/><path d="M17.5 14.8c2.1.5 3.5 2.3 3.5 4.7"/></svg><span>Bolão</span></button>
+    <button class="aba" data-alvo="orcamento" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9.5v5M18 9.5v5"/></svg><span>Orçamento</span></button>
+    <button class="aba" data-alvo="conferidor" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.2V12a8.5 8.5 0 1 1-5-7.8"/><path d="M8.5 11.5l3 3 9-9"/></svg><span>Conferidor</span></button>
+    <button class="aba" data-alvo="estatisticas" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 20.5h17"/><rect x="5" y="12" width="3.6" height="6"/><rect x="10.2" y="7.5" width="3.6" height="10.5"/><rect x="15.4" y="4" width="3.6" height="14"/></svg><span>Estatísticas</span></button>
   </div>
 </nav>
 
@@ -100,19 +100,20 @@
             <input type="number" id="bol-pessoas" min="1" max="100" value="4">
           </div>
           <div class="campo">
-            <label for="bol-valor">Valor total (R$) — vazio usa o custo oficial</label>
+            <label for="bol-valor">Valor total (R$)</label>
             <input type="text" id="bol-valor" inputmode="decimal" placeholder="ex.: 120,00">
+            <small class="ajuda">Em branco, usamos o custo oficial.</small>
           </div>
         </div>
-        <button class="botao" type="submit">Montar bolão</button>
+        <div class="botoes">
+          <button class="botao" type="submit">Montar bolão</button>
+          <button class="botao secundario" type="button" id="btn-copiar-whats" hidden>Copiar mensagem</button>
+          <a class="botao secundario" id="btn-abrir-whats" hidden target="_blank" rel="noopener">Abrir no WhatsApp</a>
+        </div>
       </form>
       <div id="bol-saida"></div>
       <div class="caixa-resumo" id="bol-rateio" hidden></div>
       <div class="msg-whats" id="bol-msg" hidden></div>
-      <div class="botoes">
-        <button class="botao" type="button" id="btn-copiar-whats" hidden>Copiar mensagem</button>
-        <a class="botao secundario" id="btn-abrir-whats" hidden target="_blank" rel="noopener">Abrir no WhatsApp</a>
-      </div>
       <div class="aviso-obs">ℹ️ Na Lotomania, 0 acertos também paga prêmio!</div>
     </div>
   </section>
@@ -125,7 +126,7 @@
       <form id="form-orcamento">
         <div class="linha-campos">
           <div class="campo">
-            <label for="orc-valor">Quanto vocês têm? (R$)</label>
+            <label for="orc-valor">Orçamento (R$)</label>
             <input type="text" id="orc-valor" inputmode="decimal" placeholder="ex.: 100">
           </div>
           <div class="campo">
@@ -133,7 +134,9 @@
             <input type="number" id="orc-pessoas" min="1" max="100" value="1">
           </div>
         </div>
-        <button class="botao" type="submit">Ver possibilidades</button>
+        <div class="botoes">
+          <button class="botao" type="submit">Ver possibilidades</button>
+        </div>
       </form>
       <p class="erro" id="orc-erro" hidden></p>
       <div id="orc-tabela" style="margin-top:14px"></div>
@@ -149,19 +152,22 @@
       acertos marcados.</p>
       <form id="form-conferidor">
         <div class="linha-campos">
-          <div class="campo" style="flex:2">
+          <div class="campo">
             <label for="conf-resultado">Resultado sorteado</label>
             <input type="text" id="conf-resultado" inputmode="numeric" placeholder="dezenas do sorteio">
-          </div>
-          <div class="campo" style="justify-content:flex-end">
-            <button class="botao secundario" type="button" id="btn-ultimo">Usar último resultado</button>
+            <small class="ajuda">Separe por espaço, traço ou vírgula.</small>
           </div>
         </div>
-        <div class="campo">
-          <label for="conf-jogos">Seus jogos (um por linha)</label>
-          <textarea id="conf-jogos" placeholder="Jogo 1: ..."></textarea>
+        <div class="linha-campos">
+          <div class="campo">
+            <label for="conf-jogos">Seus jogos (um por linha)</label>
+            <textarea id="conf-jogos" placeholder="Cole aqui, um jogo por linha"></textarea>
+          </div>
         </div>
-        <button class="botao" type="submit" style="margin-top:12px">Conferir</button>
+        <div class="botoes">
+          <button class="botao" type="submit">Conferir</button>
+          <button class="botao secundario" type="button" id="btn-ultimo">Usar último resultado</button>
+        </div>
       </form>
       <p class="erro" id="conf-erro" hidden></p>
       <div id="conf-saida" hidden style="margin-top:14px"></div>
@@ -207,6 +213,7 @@
 </footer>
 
 <script>window.PAGINA = { slug: "lotomania" };</script>
+<script src="js/interface.js"></script>
 <script src="js/motor.js"></script>
 <script src="js/app.js"></script>
 <script data-goatcounter="https://sortelabs.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

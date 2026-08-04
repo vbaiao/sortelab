@@ -23,9 +23,12 @@ def exportar(slug, concursos):
         linhas.append(f"{numero};{data};" + ";".join(celulas))
     conteudo = "\r\n".join(linhas) + "\r\n"
 
+    # newline="" na leitura: sem isso o Python converte os \r\n do arquivo em
+    # \n, a comparação nunca bate e o CSV é reescrito a cada rodada — o que
+    # enchia o repositório de commits idênticos.
     destino = os.path.join(PASTA_CSV, f"{slug}.csv")
     if os.path.exists(destino):
-        with open(destino, encoding="utf-8-sig") as f:
+        with open(destino, encoding="utf-8-sig", newline="") as f:
             if f.read() == conteudo:
                 return False
     with open(destino, "w", encoding="utf-8-sig", newline="") as f:
