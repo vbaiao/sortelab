@@ -26,13 +26,13 @@
     }
   }
 
-  /* ---------- revelação ao rolar ---------- */
+  /* ---------- revelação ao rolar ----------
+     Só entra em ação o que está fora da tela no carregamento: o que já
+     aparece de cara fica quieto, sem piscar. Sem JS, nada é escondido. */
   const alvos = document.querySelectorAll(".revelar");
   if (!alvos.length) return;
-  if (semMovimento || !("IntersectionObserver" in window)) {
-    alvos.forEach(el => el.classList.add("visivel"));
-    return;
-  }
+  if (semMovimento || !("IntersectionObserver" in window)) return;
+
   const observador = new IntersectionObserver((entradas) => {
     entradas.forEach(entrada => {
       if (entrada.isIntersecting) {
@@ -41,5 +41,11 @@
       }
     });
   }, { rootMargin: "0px 0px -12% 0px", threshold: .08 });
-  alvos.forEach(el => observador.observe(el));
+
+  alvos.forEach(el => {
+    const posicao = el.getBoundingClientRect();
+    if (posicao.top < window.innerHeight * 0.9) return;   // já está à vista
+    el.classList.add("armado");
+    observador.observe(el);
+  });
 })();

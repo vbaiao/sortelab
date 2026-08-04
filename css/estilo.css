@@ -65,8 +65,11 @@ a { color: var(--cor); text-underline-offset: 2px; }
 
 /* ---------------------------------------------------- revelação */
 
-.revelar { opacity: 0; transform: translateY(14px); }
-.revelar.visivel {
+/* O conteúdo nasce visível: quem esconde para revelar depois é o JavaScript,
+   e só no que está fora da tela. Assim, se o script falhar ou não rodar
+   (buscadores, leitores, navegador antigo), nada some da página. */
+.revelar.armado { opacity: 0; transform: translateY(14px); }
+.revelar.armado.visivel {
   opacity: 1; transform: none;
   transition: opacity 620ms cubic-bezier(.2, .7, .3, 1),
               transform 620ms cubic-bezier(.2, .7, .3, 1);
