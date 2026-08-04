@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google-site-verification" content="1ASDodTUQNNEFQTdYF4TCvACuHrtQRBXcfsDynb9Msk" />
 <title>Dupla Sena: Gerador, Bolão com Rateio e Conferidor — SorteLabs</title>
-<meta name="description" content="Gerador estatístico, conferidor e bolão com rateio para a Dupla Sena. Ferramentas grátis do SorteLabs.">
+<meta name="description" content="Monte jogos da Dupla Sena, organize o bolão do grupo e confira os dois sorteios do concurso. Grátis e sem cadastro.">
 <meta property="og:title" content="Dupla Sena — Gerador, Bolão e Conferidor | SorteLabs">
-<meta property="og:description" content="Gerador estatístico, conferidor e bolão com rateio para a Dupla Sena. Ferramentas grátis do SorteLabs.">
+<meta property="og:description" content="Monte jogos da Dupla Sena, organize o bolão do grupo e confira os dois sorteios do concurso. Grátis e sem cadastro.">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://sortelabs.com.br/duplasena.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,17 +46,17 @@
 
 <main class="miolo painel">
 
-  <p class="dica" style="margin-top:0">A Dupla Sena dá duas chances por concurso: dois sorteios de 6 dezenas de 50. O histórico aqui usa o 1º sorteio; para conferir o 2º, é só digitar as dezenas dele no conferidor.</p>
+  <p class="dica" style="margin-top:0">A Dupla Sena sorteia 6 dezenas entre 1 e 50, duas vezes no mesmo concurso. São duas chances por aposta. Aqui você monta os jogos e confere os dois sorteios.</p>
   <div class="anuncio" aria-hidden="true"><!-- espaço reservado: anúncio topo --></div>
 
   <section class="ferramenta" id="gerador">
     <div class="cartao">
       <h2>Gerar jogos</h2>
-      <p class="dica">Cada dezena recebe uma nota (o <em>score</em>): 50% da
-      frequência em todo o histórico, 35% da frequência nos últimos 200
-      concursos e 15% do atraso, que é há quantos concursos ela não sai. As
-      dezenas com nota melhor entram com mais facilidade no sorteio dos seus
-      jogos — mas há aleatoriedade, então cada clique traz jogos diferentes.</p>
+      <p class="dica">Damos uma nota para cada dezena. A nota olha três coisas. Quantas
+      vezes a dezena já saiu. Quantas vezes ela saiu nos últimos 200 sorteios.
+      E há quanto tempo ela não sai. As dezenas com nota alta aparecem
+      mais nos seus jogos. Mas tem sorteio no meio: cada vez que você clica,
+      saem jogos diferentes.</p>
       <form id="form-gerador">
         <div class="linha-campos">
           <div class="campo">
@@ -71,12 +71,11 @@
         </div>
       </form>
       <p class="dica" style="margin:12px 0 0">
-      <strong>Jogo campeão:</strong> em vez de sortear, ele testa as
-      combinações das dezenas mais bem pontuadas e devolve a de maior nota
-      total — um único jogo, sempre o mesmo, até sair um novo concurso e as
-      notas mudarem. É o palpite que usamos no
-      <a href="desafio.html">Desafio do Campeão</a>, onde registramos em
-      público quantos acertos ele faz a cada sorteio.</p>
+      <strong>E o botão "jogo campeão"?</strong> Ele não sorteia: ele monta o
+      jogo com as dezenas de nota mais alta. É um jogo só, e ele fica o mesmo
+      até sair o próximo sorteio. É esse jogo que usamos no
+      <a href="desafio.html">Desafio do Campeão</a>, onde mostramos quantos
+      números ele acerta toda vez.</p>
       <div id="ger-saida"></div>
       <div class="caixa-resumo" id="ger-resumo" hidden></div>
       <div class="aviso-obs">ℹ️ O histórico usa o 1º sorteio de cada concurso; para conferir o 2º, digite as dezenas dele no conferidor.</div>
@@ -86,8 +85,8 @@
   <section class="ferramenta" id="bolao" hidden>
     <div class="cartao">
       <h2>Montar bolão</h2>
-      <p class="dica">Gere os jogos do grupo, faça o rateio e copie a mensagem
-      pronta para o WhatsApp.</p>
+      <p class="dica">Monte os jogos do grupo, veja quanto cada pessoa paga e
+      copie a mensagem pronta para mandar no WhatsApp.</p>
       <form id="form-bolao">
         <div class="linha-campos">
           <div class="campo">
@@ -124,8 +123,8 @@
   <section class="ferramenta" id="orcamento" hidden>
     <div class="cartao">
       <h2>Planejar pelo orçamento</h2>
-      <p class="dica">Diga quanto o grupo tem e veja todas as formas de gastar
-      — com a chance real de cada uma, sem promessa milagrosa.</p>
+      <p class="dica">Diga quanto vocês têm para gastar. Mostramos as opções de
+      jogo que cabem nesse dinheiro, quanto sobra e a chance de cada uma.</p>
       <form id="form-orcamento">
         <div class="linha-campos">
           <div class="campo">
@@ -150,9 +149,9 @@
   <section class="ferramenta" id="conferidor" hidden>
     <div class="cartao">
       <h2>Conferir jogos</h2>
-      <p class="dica">Informe o resultado, cole seus jogos (um por linha, em
-      qualquer formato: 05-10-22, 5 10 22, ou linhas copiadas daqui) e veja os
-      acertos marcados.</p>
+      <p class="dica">Primeiro coloque o resultado do sorteio. Depois cole seus
+      jogos, um em cada linha. Pode colar do jeito que estiver: 05-10-22 ou
+      5 10 22. Vamos marcar os números que você acertou.</p>
       <form id="form-conferidor">
         <div class="linha-campos">
           <div class="campo">
@@ -183,18 +182,17 @@
     <div id="est-conteudo"></div>
     <div class="cartao">
       <h2>Baixar o histórico completo</h2>
-      <p class="dica">Todos os concursos da Dupla Sena desde o primeiro sorteio, num
-      arquivo só e atualizado junto com o site. O CSV abre direto no Excel (dois
-      cliques) com uma dezena por coluna; o JSON é o mesmo dado para quem quiser
-      usar em programação. Pode usar como quiser — são dados públicos da Caixa.</p>
+      <p class="dica">Baixe todos os sorteios da Dupla Sena, desde o primeiro. O
+      arquivo CSV abre no Excel com dois cliques, com uma dezena em cada coluna.
+      O JSON é para quem programa. É de graça e você pode usar como quiser.</p>
       <div class="botoes">
         <a class="botao" href="dados/csv/duplasena.csv" download>Baixar CSV (Excel)</a>
         <a class="botao secundario" href="dados/duplasena.json" download>Baixar JSON</a>
       </div>
     </div>
-    <div class="aviso-obs">Curiosidade honesta: essas listas descrevem o
-    passado, não preveem o futuro. Cada dezena tem exatamente a mesma chance
-    em todo sorteio — o globo não tem memória.</div>
+    <div class="aviso-obs">Atenção: estas listas mostram o que já aconteceu.
+    Elas não adivinham o próximo sorteio. Em todo sorteio, cada dezena tem a
+    mesma chance de sair — não importa se ela saiu muito ou pouco antes.</div>
   </section>
 
   <div class="anuncio" aria-hidden="true"><!-- espaço reservado: anúncio rodapé --></div>
@@ -202,12 +200,11 @@
 
 <footer class="rodape">
   <div class="miolo">
-    <div class="selo-honesto"><strong>O selo honesto do SorteLabs:</strong>
-    nenhuma estatística aumenta sua chance de ganhar — e quem prometer o
-    contrário está te enganando. Nossas ferramentas organizam a brincadeira:
-    jogos com perfil de sorteio real, bolão sem briga na hora do rateio e
-    conferência sem dor de cabeça. Jogue por diversão e com moderação. Proibido
-    para menores de 18 anos.</div>
+    <div class="selo-honesto"><strong>O selo honesto do SorteLabs.</strong>
+    Nenhuma conta aumenta a sua chance de ganhar na loteria. Quem promete isso
+    está te enganando. O que a gente faz é organizar a brincadeira: montar os
+    jogos, dividir o bolão sem briga e conferir tudo rápido. Jogue por diversão
+    e só o quanto puder gastar. Proibido para menores de 18 anos.</div>
     <p>SorteLabs — ferramentas gratuitas para loterias ·
     <a href="index.html">todas as loterias</a> · dados oficiais da Caixa,
     atualizados todo dia após os sorteios. Este site não tem vínculo com a

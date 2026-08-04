@@ -139,26 +139,27 @@
     const legenda = document.createElement("p");
     legenda.className = "dica";
     legenda.style.margin = "12px 0 0";
-    legenda.innerHTML = "<strong>O que são esses números:</strong> a " +
-      "<em>soma</em> é o total das dezenas do jogo e os <em>pares</em> são " +
-      "quantas delas são números pares. Servem para você conferir que o jogo " +
-      "tem a cara de um sorteio real: na " + cfg.nome + ", a soma costuma cair " +
-      "entre <strong>" + perfil.somaMin + " e " + perfil.somaMax + "</strong> " +
-      "(média " + perfil.somaMedia + ") e os pares entre <strong>" +
-      perfil.paresMin + " e " + perfil.paresMax + "</strong>. Todo jogo gerado " +
-      "aqui já passou por esse filtro. " +
-      "<em>Nem soma nem pares mudam sua chance de ganhar</em>: eles só evitam " +
-      "combinações de cara estranha, como dezenas em sequência, que muita " +
-      "gente joga e dividiriam o prêmio com mais pessoas.";
+    legenda.innerHTML = "<strong>O que é soma e o que são pares?</strong><br>" +
+      "Soma é o resultado de somar as dezenas do jogo. " +
+      "Pares é quantas dezenas do jogo são números pares.<br><br>" +
+      "<strong>Para que isso serve?</strong><br>" +
+      "Para o seu jogo ficar parecido com os sorteios de verdade. Na " +
+      cfg.nome + ", a soma quase sempre fica entre " + perfil.somaMin +
+      " e " + perfil.somaMax + ". E quase sempre saem de " + perfil.paresMin +
+      " a " + perfil.paresMax + " dezenas pares. Seus jogos já saem assim. " +
+      "Você não precisa fazer nada.<br><br>" +
+      "<strong>Isso aumenta minha chance de ganhar?</strong><br>" +
+      "Não. Serve só para evitar jogos esquisitos, como 1-2-3-4-5-6. " +
+      "Muita gente marca jogos assim. Se um deles ganhar, você divide o " +
+      "prêmio com muita gente.";
     saida.appendChild(legenda);
 
     const custo = jogos.length * cfg.preco;
     resumo.innerHTML = (campeao
-      ? "<strong>Este é o jogo campeão:</strong> entre todas as combinações " +
-        "possíveis, é a de maior pontuação no nosso score — e continuará sendo " +
-        "exatamente esta até sair o próximo concurso. "
+      ? "<strong>Este é o jogo campeão.</strong> É o jogo que tirou a nota mais " +
+        "alta de todos. Ele só muda quando sair o próximo sorteio. "
       : "") +
-      "Custo na lotérica: <strong>" + SL.dinheiro(custo) + "</strong>" +
+      "Preço na lotérica: <strong>" + SL.dinheiro(custo) + "</strong>" +
       (jogos.length > 1 ? " (" + jogos.length + " × " + SL.dinheiro(cfg.preco) + ")" : "") + ".";
     resumo.hidden = false;
     $("#btn-copiar-jogos").hidden = false;
@@ -205,7 +206,7 @@
       "Custo oficial estimado: <strong>" + SL.dinheiro(custoOficial) + "</strong> · " +
       "Valor do bolão: <strong>" + SL.dinheiro(valor) + "</strong> · " +
       pessoas + " pessoa(s) · Cota: <strong>" + SL.dinheiro(cota) + "</strong>" +
-      (chance ? " · Chance do prêmio máximo: 1 em " + SL.inteiroBr(chance) : "");
+      (chance ? " · Chance de acertar tudo: 1 em " + SL.inteiroBr(chance) : "");
     $("#bol-rateio").hidden = false;
 
     const msg = "*Bolão " + cfg.nome + " — SorteLabs*\n" +
@@ -258,8 +259,8 @@
       });
     }
     if (!opcoes.length) {
-      mostrarErro(erro, "Com " + SL.dinheiro(valor) + " não dá para a aposta mínima da " +
-        cfg.nome + " (" + SL.dinheiro(SL.custoAposta(cfg, cfg.apostaMin)) + "). Junte mais gente.");
+      mostrarErro(erro, "Com " + SL.dinheiro(valor) + " não dá nem para uma aposta da " +
+        cfg.nome + ", que custa " + SL.dinheiro(SL.custoAposta(cfg, cfg.apostaMin)) + ". Junte mais gente!");
       return;
     }
     mostrarErro(erro, "");
@@ -304,9 +305,10 @@
       const nota = document.createElement("p");
       nota.className = "dica";
       nota.style.marginTop = "10px";
-      nota.textContent = "Leitura honesta: com o mesmo orçamento, a chance " +
-        "depende só do total apostado — as opções quase empatam, muda a sobra. " +
-        "Jogos com mais dezenas concentram prêmios; mais jogos espalham dezenas.";
+      nota.innerHTML = "<strong>Repare:</strong> com o mesmo dinheiro, a chance " +
+        "é quase igual em todas as opções. O que muda é o troco que sobra. " +
+        "Jogos com mais dezenas juntam vários prêmios de uma vez. Muitos jogos " +
+        "pequenos espalham mais números diferentes.";
       area.appendChild(nota);
     }
   }
@@ -362,9 +364,9 @@
     const erro = $("#conf-erro");
     const resultado = SL.lerLinhaJogo(cfg, $("#conf-resultado").value, cfg.sorteadas);
     if (!resultado) {
-      mostrarErro(erro, "O resultado precisa ter exatamente " + cfg.sorteadas +
-        " dezenas entre " + SL.dez(cfg.lo) + " e " + cfg.hi +
-        ". Use o botão “Usar último resultado” ou confira a digitação.");
+      mostrarErro(erro, "O resultado precisa ter " + cfg.sorteadas +
+        " dezenas, de " + SL.dez(cfg.lo) + " a " + cfg.hi +
+        ". Confira o que você digitou ou clique em “Usar último resultado”.");
       return;
     }
     const linhas = $("#conf-jogos").value.split("\n").map(l => l.trim()).filter(l => l);
@@ -374,8 +376,8 @@
       if (jogo) jogos.push(jogo); else ignoradas.push(l);
     });
     if (!jogos.length) {
-      mostrarErro(erro, "Cole pelo menos um jogo (de " + cfg.apostaMin + " a " +
-        cfg.apostaMax + " dezenas por linha).");
+      mostrarErro(erro, "Cole pelo menos um jogo. Cada linha precisa ter de " +
+        cfg.apostaMin + " a " + cfg.apostaMax + " dezenas.");
       return;
     }
     mostrarErro(erro, "");
@@ -410,11 +412,11 @@
 
     const resumo = document.createElement("div");
     resumo.className = "caixa-resumo";
-    resumo.innerHTML = "<strong>" + jogos.length + " jogo(s) conferido(s).</strong> " +
-      (premiados ? premiados + " jogo(s) premiado(s)."
-                 : "Nenhum premiado desta vez.") +
-      (ignoradas.length ? "<br>" + ignoradas.length +
-        " linha(s) ignorada(s) por não parecerem um jogo." : "");
+    resumo.innerHTML = "<strong>Conferimos " + jogos.length + " jogo(s).</strong> " +
+      (premiados ? premiados + " deles ganhou prêmio!"
+                 : "Nenhum ganhou prêmio desta vez.") +
+      (ignoradas.length ? "<br>Pulamos " + ignoradas.length +
+        " linha(s) que não pareciam um jogo." : "");
     saida.appendChild(resumo);
     saida.hidden = false;
   }

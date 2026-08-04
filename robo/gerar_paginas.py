@@ -11,64 +11,36 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGINAS = [
     dict(slug="megasena", nome="Mega-Sena", cor="#209869",
          aposta="6 a 20 dezenas de 1 a 60 · sorteio de 6",
-         descricao="Gerador estatístico, conferidor copia-e-cola e calculadora "
-                   "de bolão com rateio para a Mega-Sena. Grátis e honesto: "
-                   "nada aumenta sua chance, a gente só organiza a brincadeira.",
-         intro="A Mega-Sena sorteia 6 dezenas de 60. Aqui você gera jogos com "
-               "base na estatística de todos os concursos desde 1996, monta "
-               "bolão com rateio pronto para o WhatsApp e confere vários "
-               "jogos de uma vez."),
+         descricao="Monte jogos da Mega-Sena, organize o bolão com a divisão pronta e confira vários jogos de uma vez. Grátis e sem cadastro.",
+         intro="A Mega-Sena sorteia 6 dezenas entre 1 e 60. Aqui você monta seus jogos, organiza o bolão do grupo e confere tudo de uma vez. Usamos todos os sorteios desde 1996."),
     dict(slug="lotofacil", nome="Lotofácil", cor="#930089",
          aposta="15 a 20 dezenas de 1 a 25 · sorteio de 15",
-         descricao="Gerador estatístico, conferidor de vários jogos e bolão "
-                   "com rateio para a Lotofácil. Ferramentas grátis do SorteLabs.",
-         intro="A Lotofácil sorteia 15 dezenas de 25 — a queridinha dos "
-               "bolões. Gere jogos com o perfil típico dos sorteios, monte o "
-               "bolão do grupo com rateio pronto para o WhatsApp e confira "
-               "todos os jogos de uma vez."),
+         descricao="Monte jogos da Lotofácil, organize o bolão do grupo e confira vários jogos de uma vez. Grátis e sem cadastro.",
+         intro="A Lotofácil sorteia 15 dezenas entre 1 e 25. É a loteria preferida dos bolões, porque acertar 11 números já paga. Monte seus jogos, divida o bolão e confira tudo aqui."),
     dict(slug="quina", nome="Quina", cor="#260085",
          aposta="5 a 15 dezenas de 1 a 80 · sorteio de 5",
-         descricao="Gerador estatístico, conferidor e bolão com rateio para a "
-                   "Quina. Ferramentas grátis do SorteLabs.",
-         intro="A Quina sorteia 5 dezenas de 80, todos os dias. Gere jogos "
-               "guiados pela estatística do histórico completo, planeje o "
-               "orçamento e confira seus jogos em segundos."),
+         descricao="Monte jogos da Quina, organize o bolão do grupo e confira vários jogos de uma vez. Grátis e sem cadastro.",
+         intro="A Quina sorteia 5 dezenas entre 1 e 80, quase todo dia. Acertar 2 números já paga prêmio. Monte seus jogos, planeje quanto gastar e confira os resultados."),
     dict(slug="lotomania", nome="Lotomania", cor="#E07000",
          aposta="50 dezenas de 00 a 99 · sorteio de 20 · 0 acertos também paga",
-         descricao="Gerador de 50 dezenas, conferidor e bolão com rateio para "
-                   "a Lotomania. Ferramentas grátis do SorteLabs.",
-         intro="Na Lotomania você marca 50 dezenas de 100 e ganha com 15 a 20 "
-               "acertos — ou com nenhum! Gere seu cartão com base na "
-               "estatística e confira sem sofrimento (são muitas dezenas, "
-               "deixa que a gente conta)."),
+         descricao="Monte seu cartão de 50 dezenas da Lotomania, organize o bolão e confira sem contar na mão. Grátis e sem cadastro.",
+         intro="Na Lotomania você marca 50 dezenas entre 00 e 99, e o sorteio tira 20. Ganha quem acerta de 15 a 20 — ou quem não acerta nenhuma! Aqui você monta o cartão e confere sem contar na mão."),
     dict(slug="duplasena", nome="Dupla Sena", cor="#A61324",
          aposta="6 a 15 dezenas de 1 a 50 · dois sorteios por concurso",
-         descricao="Gerador estatístico, conferidor e bolão com rateio para a "
-                   "Dupla Sena. Ferramentas grátis do SorteLabs.",
-         intro="A Dupla Sena dá duas chances por concurso: dois sorteios de 6 "
-               "dezenas de 50. O histórico aqui usa o 1º sorteio; para "
-               "conferir o 2º, é só digitar as dezenas dele no conferidor."),
+         descricao="Monte jogos da Dupla Sena, organize o bolão do grupo e confira os dois sorteios do concurso. Grátis e sem cadastro.",
+         intro="A Dupla Sena sorteia 6 dezenas entre 1 e 50, duas vezes no mesmo concurso. São duas chances por aposta. Aqui você monta os jogos e confere os dois sorteios."),
     dict(slug="diadesorte", nome="Dia de Sorte", cor="#CB852B",
          aposta="7 a 15 dezenas de 1 a 31 + Mês da Sorte",
-         descricao="Gerador estatístico, conferidor e bolão com rateio para o "
-                   "Dia de Sorte. Ferramentas grátis do SorteLabs.",
-         intro="O Dia de Sorte sorteia 7 dezenas de 31, mais o Mês da Sorte. "
-               "Gere jogos com base no histórico e confira os seus — o mês "
-               "você escolhe no volante, do seu jeito."),
+         descricao="Monte jogos do Dia de Sorte, organize o bolão do grupo e confira vários jogos de uma vez. Grátis e sem cadastro.",
+         intro="O Dia de Sorte sorteia 7 dezenas entre 1 e 31, mais um mês da sorte. A gente cuida das dezenas; o mês você escolhe no volante."),
     dict(slug="timemania", nome="Timemania", cor="#0E8A3E",
          aposta="10 dezenas fixas de 1 a 80 + Time do Coração",
-         descricao="Gerador estatístico, conferidor e bolão com rateio para a "
-                   "Timemania. Ferramentas grátis do SorteLabs.",
-         intro="Na Timemania você marca 10 dezenas de 80 e o seu Time do "
-               "Coração. Gere os números pela estatística — o time, claro, "
-               "é questão de fé."),
+         descricao="Monte jogos da Timemania, organize o bolão do grupo e confira vários jogos de uma vez. Grátis e sem cadastro.",
+         intro="Na Timemania você marca 10 dezenas entre 1 e 80, mais o seu time do coração. A gente ajuda com os números. O time, claro, é você quem escolhe."),
     dict(slug="maismilionaria", nome="+Milionária", cor="#2E3078",
          aposta="6 a 12 dezenas de 1 a 50 + 2 trevos",
-         descricao="Gerador estatístico, conferidor e bolão com rateio para a "
-                   "+Milionária. Ferramentas grátis do SorteLabs.",
-         intro="A +Milionária sorteia 6 dezenas de 50 e 2 trevos de 6. As "
-               "dezenas você gera aqui pela estatística; os trevos são "
-               "marcados à parte no volante."),
+         descricao="Monte jogos da +Milionária, organize o bolão do grupo e confira vários jogos de uma vez. Grátis e sem cadastro.",
+         intro="A +Milionária sorteia 6 dezenas entre 1 e 50, mais 2 trevos. Aqui você monta as dezenas; os trevos você marca no volante."),
 ]
 
 TEMPLATE = """<!DOCTYPE html>
@@ -125,11 +97,11 @@ TEMPLATE = """<!DOCTYPE html>
   <section class="ferramenta" id="gerador">
     <div class="cartao">
       <h2>Gerar jogos</h2>
-      <p class="dica">Cada dezena recebe uma nota (o <em>score</em>): 50% da
-      frequência em todo o histórico, 35% da frequência nos últimos 200
-      concursos e 15% do atraso, que é há quantos concursos ela não sai. As
-      dezenas com nota melhor entram com mais facilidade no sorteio dos seus
-      jogos — mas há aleatoriedade, então cada clique traz jogos diferentes.</p>
+      <p class="dica">Damos uma nota para cada dezena. A nota olha três coisas. Quantas
+      vezes a dezena já saiu. Quantas vezes ela saiu nos últimos 200 sorteios.
+      E há quanto tempo ela não sai. As dezenas com nota alta aparecem
+      mais nos seus jogos. Mas tem sorteio no meio: cada vez que você clica,
+      saem jogos diferentes.</p>
       <form id="form-gerador">
         <div class="linha-campos">
           <div class="campo">
@@ -144,12 +116,11 @@ TEMPLATE = """<!DOCTYPE html>
         </div>
       </form>
       <p class="dica" style="margin:12px 0 0">
-      <strong>Jogo campeão:</strong> em vez de sortear, ele testa as
-      combinações das dezenas mais bem pontuadas e devolve a de maior nota
-      total — um único jogo, sempre o mesmo, até sair um novo concurso e as
-      notas mudarem. É o palpite que usamos no
-      <a href="desafio.html">Desafio do Campeão</a>, onde registramos em
-      público quantos acertos ele faz a cada sorteio.</p>
+      <strong>E o botão "jogo campeão"?</strong> Ele não sorteia: ele monta o
+      jogo com as dezenas de nota mais alta. É um jogo só, e ele fica o mesmo
+      até sair o próximo sorteio. É esse jogo que usamos no
+      <a href="desafio.html">Desafio do Campeão</a>, onde mostramos quantos
+      números ele acerta toda vez.</p>
       <div id="ger-saida"></div>
       <div class="caixa-resumo" id="ger-resumo" hidden></div>
       {obs_html}
@@ -159,8 +130,8 @@ TEMPLATE = """<!DOCTYPE html>
   <section class="ferramenta" id="bolao" hidden>
     <div class="cartao">
       <h2>Montar bolão</h2>
-      <p class="dica">Gere os jogos do grupo, faça o rateio e copie a mensagem
-      pronta para o WhatsApp.</p>
+      <p class="dica">Monte os jogos do grupo, veja quanto cada pessoa paga e
+      copie a mensagem pronta para mandar no WhatsApp.</p>
       <form id="form-bolao">
         <div class="linha-campos">
           <div class="campo">
@@ -194,8 +165,8 @@ TEMPLATE = """<!DOCTYPE html>
   <section class="ferramenta" id="orcamento" hidden>
     <div class="cartao">
       <h2>Planejar pelo orçamento</h2>
-      <p class="dica">Diga quanto o grupo tem e veja todas as formas de gastar
-      — com a chance real de cada uma, sem promessa milagrosa.</p>
+      <p class="dica">Diga quanto vocês têm para gastar. Mostramos as opções de
+      jogo que cabem nesse dinheiro, quanto sobra e a chance de cada uma.</p>
       <form id="form-orcamento">
         <div class="linha-campos">
           <div class="campo">
@@ -220,9 +191,9 @@ TEMPLATE = """<!DOCTYPE html>
   <section class="ferramenta" id="conferidor" hidden>
     <div class="cartao">
       <h2>Conferir jogos</h2>
-      <p class="dica">Informe o resultado, cole seus jogos (um por linha, em
-      qualquer formato: 05-10-22, 5 10 22, ou linhas copiadas daqui) e veja os
-      acertos marcados.</p>
+      <p class="dica">Primeiro coloque o resultado do sorteio. Depois cole seus
+      jogos, um em cada linha. Pode colar do jeito que estiver: 05-10-22 ou
+      5 10 22. Vamos marcar os números que você acertou.</p>
       <form id="form-conferidor">
         <div class="linha-campos">
           <div class="campo">
@@ -253,18 +224,17 @@ TEMPLATE = """<!DOCTYPE html>
     <div id="est-conteudo"></div>
     <div class="cartao">
       <h2>Baixar o histórico completo</h2>
-      <p class="dica">Todos os concursos da {nome} desde o primeiro sorteio, num
-      arquivo só e atualizado junto com o site. O CSV abre direto no Excel (dois
-      cliques) com uma dezena por coluna; o JSON é o mesmo dado para quem quiser
-      usar em programação. Pode usar como quiser — são dados públicos da Caixa.</p>
+      <p class="dica">Baixe todos os sorteios da {nome}, desde o primeiro. O
+      arquivo CSV abre no Excel com dois cliques, com uma dezena em cada coluna.
+      O JSON é para quem programa. É de graça e você pode usar como quiser.</p>
       <div class="botoes">
         <a class="botao" href="dados/csv/{slug}.csv" download>Baixar CSV (Excel)</a>
         <a class="botao secundario" href="dados/{slug}.json" download>Baixar JSON</a>
       </div>
     </div>
-    <div class="aviso-obs">Curiosidade honesta: essas listas descrevem o
-    passado, não preveem o futuro. Cada dezena tem exatamente a mesma chance
-    em todo sorteio — o globo não tem memória.</div>
+    <div class="aviso-obs">Atenção: estas listas mostram o que já aconteceu.
+    Elas não adivinham o próximo sorteio. Em todo sorteio, cada dezena tem a
+    mesma chance de sair — não importa se ela saiu muito ou pouco antes.</div>
   </section>
 
   <div class="anuncio" aria-hidden="true"><!-- espaço reservado: anúncio rodapé --></div>
@@ -272,12 +242,11 @@ TEMPLATE = """<!DOCTYPE html>
 
 <footer class="rodape">
   <div class="miolo">
-    <div class="selo-honesto"><strong>O selo honesto do SorteLabs:</strong>
-    nenhuma estatística aumenta sua chance de ganhar — e quem prometer o
-    contrário está te enganando. Nossas ferramentas organizam a brincadeira:
-    jogos com perfil de sorteio real, bolão sem briga na hora do rateio e
-    conferência sem dor de cabeça. Jogue por diversão e com moderação. Proibido
-    para menores de 18 anos.</div>
+    <div class="selo-honesto"><strong>O selo honesto do SorteLabs.</strong>
+    Nenhuma conta aumenta a sua chance de ganhar na loteria. Quem promete isso
+    está te enganando. O que a gente faz é organizar a brincadeira: montar os
+    jogos, dividir o bolão sem briga e conferir tudo rápido. Jogue por diversão
+    e só o quanto puder gastar. Proibido para menores de 18 anos.</div>
     <p>SorteLabs — ferramentas gratuitas para loterias ·
     <a href="index.html">todas as loterias</a> · dados oficiais da Caixa,
     atualizados todo dia após os sorteios. Este site não tem vínculo com a
