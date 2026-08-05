@@ -75,6 +75,7 @@
     .then(base => {
       stats = SL.calcularEstatisticas(cfg, base.concursos);
       prepararPagina();
+      buscarNovidadesNaCaixa();
     })
     .catch(() => {
       const alvo = $("#ultimo-resultado");
@@ -84,6 +85,55 @@
 
   function ultimoConcurso() {
     return stats.concursos[stats.concursos.length - 1];
+  }
+
+  /* ---------- resultado sempre fresco, direto da Caixa ----------
+     O arquivo do site é atualizado por um robô, que pode atrasar. Aqui a
+     própria página pergunta à API oficial se saiu sorteio novo depois do
+     último que ela tem e, se saiu, usa na hora. Se a API não responder,
+     a página continua com os dados do arquivo — nada quebra. */
+
+  const API_CAIXA = "https://servicebus2.caixa.gov.br/portaldeloterias/api/";
+  const MAX_BUSCA = 8;
+
+  function buscarConcursoNaCaixa(numero) {
+    const controle = new AbortController();
+    const prazo = setTimeout(() => controle.abort(), 8000);
+    return fetch(API_CAIXA + slug + "/" + numero, { signal: controle.signal })
+      .then(r => {
+        if (!r.ok) throw new Error("indisponível");
+        return r.json();
+      })
+      .then(d => [Number(d.numero), d.dataApuracao,
+                  d.listaDezenas.map(Number).sort((a, b) => a - b)])
+      .finally(() => clearTimeout(prazo));
+  }
+
+  async function buscarNovidadesNaCaixa() {
+    const novos = [];
+    let proximo = ultimoConcurso()[0] + 1;
+    for (let i = 0; i < MAX_BUSCA; i++) {
+      let concurso;
+      try {
+        concurso = await buscarConcursoNaCaixa(proximo);
+      } catch (e) {
+        break;                       // não existe ainda, ou API fora do ar
+      }
+      if (concurso[0] !== proximo || !concurso[2].length) break;
+      novos.push(concurso);
+      proximo++;
+    }
+    if (!novos.length) return;
+
+    stats = SL.calcularEstatisticas(cfg, stats.concursos.concat(novos));
+    prepararPagina();
+    const alvo = $("#ultimo-resultado");
+    const aviso = document.createElement("span");
+    aviso.className = "rotulo fresco";
+    aviso.textContent = novos.length === 1
+      ? "buscado agora na Caixa"
+      : novos.length + " sorteios buscados agora na Caixa";
+    alvo.appendChild(aviso);
   }
 
   function prepararPagina() {
