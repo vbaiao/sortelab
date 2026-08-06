@@ -45,7 +45,9 @@
   sorteios antigos: refizemos a conta com os dados que existiam na véspera de
   cada um. As outras foram salvas no site antes do sorteio acontecer.
   "Esperado pelo acaso" é quantos números um jogo qualquer acertaria, em
-  média. Repare como o nosso jogo vive em volta desse número.</div>
+  média. Repare como o nosso jogo vive em volta desse número.<br><br>
+  As linhas marcadas com "agora" são o palpite que já estava cravado aqui,
+  conferido pela própria página assim que o resultado saiu na Caixa.</div>
 </main>
 
 <footer class="rodape">
@@ -62,107 +64,7 @@
 
 <script src="js/interface.js"></script>
 <script src="js/motor.js"></script>
-<script>
-"use strict";
-(function () {
-  const SL = window.SorteLab;
-  const CORES = {
-    megasena: "#209869", lotofacil: "#930089", quina: "#260085",
-    lotomania: "#E07000", duplasena: "#A61324", diadesorte: "#CB852B",
-    timemania: "#0E8A3E", maismilionaria: "#2E3078"
-  };
-  const ORDEM = ["megasena", "lotofacil", "quina", "lotomania", "duplasena",
-                 "diadesorte", "timemania", "maismilionaria"];
-
-  function bolas(nums, marcados) {
-    const marca = marcados || new Set();
-    const div = document.createElement("div");
-    div.className = "bolas";
-    nums.forEach(n => {
-      const b = document.createElement("span");
-      b.className = "bola mini" + (marca.has(n) ? " acerto" : "");
-      b.textContent = SL.dez(n);
-      div.appendChild(b);
-    });
-    return div;
-  }
-
-  fetch("dados/desafio.json").then(r => r.json()).then(desafio => {
-    const raiz = document.getElementById("conteudo");
-    raiz.textContent = "";
-    ORDEM.forEach(slug => {
-      const d = desafio[slug];
-      const cfg = SL.LOTERIAS[slug];
-      if (!d || !cfg) return;
-
-      const sec = document.createElement("section");
-      sec.className = "secao-loteria";
-      sec.style.setProperty("--cor", CORES[slug]);
-
-      const hist = d.historico || [];
-      const media = hist.length
-        ? hist.reduce((s, h) => s + h.acertos, 0) / hist.length : 0;
-      const universo = cfg.hi - cfg.lo + 1;
-      const esperado = cfg.apostaMin * cfg.sorteadas / universo;
-      const melhor = hist.length ? Math.max(...hist.map(h => h.acertos)) : 0;
-      const premiados = hist.filter(h => cfg.premios[h.acertos]).length;
-
-      const cab = document.createElement("header");
-      cab.innerHTML = "<span>" + cfg.nome + "</span>" +
-        "<span class='medias'>média " + media.toFixed(2) +
-        " · esperado pelo acaso " + esperado.toFixed(2) +
-        " · melhor: " + melhor +
-        (premiados ? " · prêmios: " + premiados : "") + "</span>";
-      sec.appendChild(cab);
-
-      const corpo = document.createElement("div");
-      corpo.className = "corpo";
-
-      if (d.pendente) {
-        const crav = document.createElement("div");
-        crav.className = "cravado";
-        const rot = document.createElement("div");
-        rot.className = "rotulo-cravado";
-        rot.textContent = "Cravado para o próximo sorteio (após o concurso " +
-          d.pendente.apos + ")";
-        crav.appendChild(rot);
-        crav.appendChild(bolas(d.pendente.jogo));
-        corpo.appendChild(crav);
-      }
-
-      const tabela = document.createElement("table");
-      tabela.className = "hist";
-      tabela.innerHTML = "<thead><tr><th>Concurso</th><th>Data</th>" +
-        "<th>Acertos</th><th>Dezenas acertadas</th></tr></thead>";
-      const tb = document.createElement("tbody");
-      hist.slice(-15).reverse().forEach(h => {
-        const alvo = new Set(h.resultado);
-        const certas = h.jogo.filter(n => alvo.has(n));
-        const tr = document.createElement("tr");
-        const selo = SL.seloPremio(cfg, h.acertos);
-        tr.innerHTML =
-          "<td>" + h.concurso + (h.retro ? "<span class='tag-retro'>retro</span>" : "") + "</td>" +
-          "<td>" + h.data + "</td>" +
-          "<td class='num-acertos'>" + h.acertos +
-            (selo ? " <span class='premio'>" + selo + "</span>" : "") + "</td>" +
-          "<td>" + (certas.length ? certas.map(SL.dez).join(" - ") : "—") + "</td>";
-        tb.appendChild(tr);
-      });
-      tabela.appendChild(tb);
-      const rolagem = document.createElement("div");
-      rolagem.className = "rolagem-x";
-      rolagem.appendChild(tabela);
-      corpo.appendChild(rolagem);
-
-      sec.appendChild(corpo);
-      raiz.appendChild(sec);
-    });
-  }).catch(() => {
-    document.getElementById("conteudo").innerHTML =
-      "<p class='dica'>Não consegui carregar o desafio agora. Recarregue a página.</p>";
-  });
-})();
-</script>
+<script src="js/desafio.js"></script>
 <script data-goatcounter="https://sortelabs.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

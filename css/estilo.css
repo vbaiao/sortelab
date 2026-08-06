@@ -696,12 +696,20 @@ table.hist { width: 100%; border-collapse: collapse; font-size: .89rem; }
 .hist td.num-acertos {
   font-family: var(--display); font-weight: 700; font-size: 1.05rem; color: var(--tinta);
 }
-.hist .tag-retro {
+.hist .tag-retro, .hist .tag-vivo {
   font-family: var(--dados); font-size: .62rem;
   text-transform: uppercase; letter-spacing: .09em;
+  border-radius: 999px; padding: 1px 7px; margin-left: 8px;
+  white-space: nowrap;
+}
+.hist .tag-retro {
   color: var(--tinta-fraca);
   border: 1px solid var(--linha-forte);
-  border-radius: 999px; padding: 1px 7px; margin-left: 8px;
+}
+.hist .tag-vivo {
+  color: #fff;
+  background: var(--cor);
+  border: 1px solid var(--cor);
 }
 
 /* ---------------------------------------------------- responsivo */
