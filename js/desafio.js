@@ -68,7 +68,9 @@
       const aviso = document.createElement("p");
       aviso.className = "dica";
       aviso.style.margin = "0 0 14px";
-      aviso.textContent = "O próximo palpite é cravado assim que o robô roda.";
+      aviso.textContent = "O palpite do próximo sorteio ainda não foi " +
+        "publicado. Ele aparece aqui em algumas horas — sempre antes do " +
+        "sorteio, senão não valeria como aposta nossa.";
       corpo.appendChild(aviso);
     }
 
