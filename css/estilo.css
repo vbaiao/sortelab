@@ -696,20 +696,24 @@ table.hist { width: 100%; border-collapse: collapse; font-size: .89rem; }
 .hist td.num-acertos {
   font-family: var(--display); font-weight: 700; font-size: 1.05rem; color: var(--tinta);
 }
-.hist .tag-retro, .hist .tag-vivo {
-  font-family: var(--dados); font-size: .62rem;
-  text-transform: uppercase; letter-spacing: .09em;
-  border-radius: 999px; padding: 1px 7px; margin-left: 8px;
+/* Duas etiquetas, mesmo formato, pesos diferentes: o palpite salvo antes do
+   sorteio é o que vale como prova, então ele aparece na cor da loteria. */
+.hist .tag-antes, .hist .tag-refeito {
+  display: inline-block;
+  font-family: var(--dados); font-size: .6rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em;
+  border-radius: 999px; padding: 2px 8px; margin-left: 8px;
   white-space: nowrap;
 }
-.hist .tag-retro {
-  color: var(--tinta-fraca);
-  border: 1px solid var(--linha-forte);
+.hist .tag-antes {
+  color: var(--cor-escura);
+  background: var(--cor-clara);
+  border: 1px solid color-mix(in srgb, var(--cor) 30%, #fff);
 }
-.hist .tag-vivo {
-  color: #fff;
-  background: var(--cor);
-  border: 1px solid var(--cor);
+.hist .tag-refeito {
+  color: var(--tinta-fraca);
+  background: transparent;
+  border: 1px solid var(--linha-forte);
 }
 
 /* ---------------------------------------------------- responsivo */

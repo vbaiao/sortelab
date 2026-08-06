@@ -81,8 +81,12 @@
       const alvo = new Set(h.resultado);
       const certas = h.jogo.filter(n => alvo.has(n));
       const selo = SL.seloPremio(cfg, h.acertos);
-      const marca = h.aoVivo ? "<span class='tag-vivo'>agora</span>"
-                  : h.retro ? "<span class='tag-retro'>retro</span>" : "";
+      /* Duas situações, e só duas: ou o palpite já estava publicado aqui
+         antes do sorteio, ou foi recalculado depois com os dados da véspera.
+         Quem fez a conferência (robô ou a página) não muda nada para quem lê. */
+      const marca = h.retro
+        ? "<span class='tag-refeito'>refeito depois</span>"
+        : "<span class='tag-antes'>salvo antes</span>";
       const tr = document.createElement("tr");
       tr.innerHTML =
         "<td>" + h.concurso + marca + "</td>" +
