@@ -66,8 +66,8 @@ TEMPLATE = """<!DOCTYPE html>
 
 <header class="topo">
   <div class="miolo">
-    <a class="marca" href="index.html"><span class="sorte">Sorte</span><span class="labs">Labs</span></a>
-    <nav><a href="desafio.html">Desafio</a><a href="index.html">Todas as loterias</a></nav>
+    <a class="marca" href="/"><span class="sorte">Sorte</span><span class="labs">Labs</span></a>
+    <nav><a href="desafio.html">Desafio</a><a href="/">Todas as loterias</a></nav>
   </div>
 </header>
 
@@ -248,7 +248,7 @@ TEMPLATE = """<!DOCTYPE html>
     jogos, dividir o bolão sem briga e conferir tudo rápido. Jogue por diversão
     e só o quanto puder gastar. Proibido para menores de 18 anos.</div>
     <p>SorteLabs — ferramentas gratuitas para loterias ·
-    <a href="index.html">todas as loterias</a> · dados oficiais da Caixa,
+    <a href="/">todas as loterias</a> · dados oficiais da Caixa,
     atualizados todo dia após os sorteios. Este site não tem vínculo com a
     Caixa Econômica Federal e não vende apostas.</p>
   </div>
@@ -305,7 +305,10 @@ def gerar():
     with open(os.path.join(RAIZ, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n'
                 '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-        for u in ["index.html", "desafio.html"] + urls:
+        # A home entra como "/" e não "/index.html": mandar o arquivo fazia o
+        # Google tratá-lo como página alternativa da raiz, e ele avisava
+        # "página alternativa com tag canônica adequada".
+        for u in ["", "desafio.html"] + urls:
             f.write(f"  <url><loc>https://sortelabs.com.br/{u}"
                     f"</loc></url>\n")
         f.write("</urlset>\n")
