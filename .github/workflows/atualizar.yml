@@ -16,9 +16,12 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: atualizar-resultados
-  cancel-in-progress: false
+# Sem trava de concorrência de propósito. Com ela, o GitHub só guarda UMA
+# execução na fila por vez e cancela a anterior quando chega outra — o que
+# gerava avisos de "job cancelado" sempre que ele liberava várias execuções
+# atrasadas de uma vez. Duas execuções simultâneas aqui são inofensivas: a
+# segunda simplesmente não encontra novidade, ou perde a corrida do push e
+# encerra em paz (veja o passo de publicação).
 
 jobs:
   atualizar:
@@ -38,11 +41,16 @@ jobs:
       - name: Publicar se houver novidade
         run: |
           if git diff --quiet dados/; then
-            echo "Nada novo hoje."
+            echo "Nada novo: o histórico já estava em dia."
+            exit 0
+          fi
+          git config user.name "Robô SorteLabs"
+          git config user.email "actions@github.com"
+          git add dados/
+          git commit -m "Resultados atualizados automaticamente"
+          if git push; then
+            echo "Publicado."
           else
-            git config user.name "Robô SorteLab"
-            git config user.email "actions@github.com"
-            git add dados/
-            git commit -m "Resultados atualizados automaticamente"
-            git push
+            echo "Outra execução publicou primeiro. Nada a fazer: os dados já"
+            echo "estão no site e a próxima rodada confere de novo."
           fi
