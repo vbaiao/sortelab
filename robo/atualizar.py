@@ -18,11 +18,14 @@ from datetime import datetime, timezone
 
 import campeao
 import exportar_csv
+import fechamento
 from loterias import API_BASE, LOTERIAS
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PASTA_DADOS = os.path.join(RAIZ, "dados")
 ARQ_DESAFIO = os.path.join(PASTA_DADOS, "desafio.json")
+ARQ_FECHAMENTO = os.path.join(PASTA_DADOS, "fechamento.json")
+PRESET_FECHAMENTO = "18-5"
 MAX_POR_EXECUCAO = 120   # limite de concursos baixados por loteria por rodada
 
 
@@ -65,7 +68,81 @@ def atualizar_desafio(slug, concursos):
     return mudou
 
 
-def buscar(slug, numero=None, timeout=20):
+def atualizar_fechamento(concursos):
+    """Desafio do Fechamento: confere o pendente e crava o próximo.
+
+    Dois lados por sorteio, mesmo padrão e mesmo custo: um montado sobre as
+    18 dezenas do jogo campeão, outro sobre 18 dezenas sorteadas com semente
+    igual ao número do concurso. O placar existe para mostrar que os dois
+    empatam.
+
+    A conta acumulada não é gravada: gasto e retorno são recalculados a
+    partir do histórico, aqui e na página.
+    """
+    if os.path.exists(ARQ_FECHAMENTO):
+        with open(ARQ_FECHAMENTO, encoding="utf-8") as f:
+            dados = json.load(f)
+    else:
+        dados = {"preset": PRESET_FECHAMENTO, "pendente": None,
+                 "historico": []}
+    dados["preset"] = PRESET_FECHAMENTO
+    indice = {c[0]: c for c in concursos}
+    tamanho = fechamento.PADROES[PRESET_FECHAMENTO]["dezenas"]
+    mudou = False
+
+    def cravar(apos):
+        corte = [c for c in concursos if c[0] <= apos]
+        alvo = apos + 1
+        return {
+            "apos": apos,
+            "campeao": {"dezenas": campeao.pool_campeao("lotofacil", corte,
+                                                        tamanho)},
+            "aleatorio": {"dezenas": fechamento.dezenas_aleatorias(
+                              alvo, tamanho, 1, 25),
+                          "semente": alvo},
+        }
+
+    while dados["pendente"] and (dados["pendente"]["apos"] + 1) in indice:
+        pendente = dados["pendente"]
+        sorteio = indice[pendente["apos"] + 1]
+        if len(sorteio[2]) != 15:
+            break                      # concurso sem dezenas: espera a próxima rodada
+        rateio = rateio_do_concurso(sorteio[0])
+        linha = {"concurso": sorteio[0], "data": sorteio[1],
+                 "resultado": sorteio[2], "rateio": rateio}
+        for lado in ("campeao", "aleatorio"):
+            dezenas = pendente[lado]["dezenas"]
+            jogos = fechamento.montar(dezenas, PRESET_FECHAMENTO)
+            nota = fechamento.avaliar(jogos, sorteio[2], rateio)
+            linha[lado] = {"dezenas": dezenas, "acertos": nota["acertos"],
+                           "retorno": nota["retorno"]}
+        dados["historico"].append(linha)
+        dados["pendente"] = cravar(sorteio[0])
+        melhor_c = max(linha["campeao"]["acertos"])
+        melhor_a = max(linha["aleatorio"]["acertos"])
+        print(f"  Fechamento: concurso {sorteio[0]} conferido — "
+              f"campeão {melhor_c}, aleatório {melhor_a}; próximo cravado.")
+        mudou = True
+
+    if not dados["pendente"]:
+        dados["pendente"] = cravar(concursos[-1][0])
+        print(f"  Fechamento: primeiro palpite cravado (após concurso "
+              f"{concursos[-1][0]}).")
+        mudou = True
+
+    if mudou:
+        with open(ARQ_FECHAMENTO, "w", encoding="utf-8") as f:
+            json.dump(dados, f, ensure_ascii=False, separators=(",", ":"))
+    return mudou
+
+
+def buscar(slug, numero=None, timeout=20, bruto=False):
+    """Consulta um concurso na API da Caixa.
+
+    Por padrão devolve só (numero, data, dezenas) — o suficiente para os
+    chamadores existentes. Com bruto=True devolve o JSON completo, porque
+    rateio_do_concurso precisa da tabela de prêmios que esse recorte descarta.
+    """
     url = API_BASE + slug + ("" if numero is None else f"/{numero}")
     req = urllib.request.Request(url, headers={
         "User-Agent": "Mozilla/5.0 (SorteLab; +https://github.com)",
@@ -73,8 +150,30 @@ def buscar(slug, numero=None, timeout=20):
     })
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         dados = json.load(resp)
+    if bruto:
+        return dados
     return (int(dados["numero"]), dados["dataApuracao"],
             sorted(int(x) for x in dados["listaDezenas"]))
+
+
+def rateio_do_concurso(numero):
+    """Valores reais de prêmio daquele concurso, vindos da API da Caixa.
+
+    Devolve {"11": 7.0, "12": 14.0, ...} ou None se a API não trouxer.
+    Nunca estima: sem rateio, o retorno fica em branco na página.
+    """
+    try:
+        dados = buscar("lotofacil", numero, bruto=True)
+    except Exception:
+        return None
+    tabela = {}
+    for faixa in dados.get("listaRateioPremio", []):
+        digitos = "".join(c for c in faixa.get("descricaoFaixa", "")
+                          if c.isdigit())
+        valor = faixa.get("valorPremio")
+        if digitos and valor is not None:
+            tabela[digitos] = float(valor)
+    return tabela or None
 
 
 def atualizar_loteria(cfg):
@@ -151,6 +250,12 @@ def main():
                     houve_novidade = True
             except Exception as erro:
                 print(f"{cfg['nome']}: desafio falhou ({erro}).")
+            if cfg["slug"] == "lotofacil":
+                try:
+                    if atualizar_fechamento(concursos):
+                        houve_novidade = True
+                except Exception as erro:
+                    print(f"{cfg['nome']}: fechamento falhou ({erro}).")
             try:
                 if exportar_csv.exportar(cfg["slug"], concursos):
                     print(f"  CSV de download atualizado.")
