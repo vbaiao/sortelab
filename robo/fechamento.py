@@ -124,3 +124,40 @@ def verificar_garantia(padrao_id, saem, acertos):
         if max(len(jogo & alvo) for jogo in jogos) < acertos:
             return False
     return True
+
+
+# ------------------------------------------------------- sorteio auditável
+
+MASCARA = 0xFFFFFFFF
+
+
+def mulberry32(semente):
+    """PRNG de 32 bits, idêntico bit a bit ao de js/fechamento.js.
+
+    Não usamos `random` da biblioteca padrão de propósito: a implementação
+    pode mudar entre versões do Python e não existe equivalente em
+    JavaScript. O lado aleatório do placar só tem valor se qualquer pessoa
+    puder reproduzi-lo — por isso o algoritmo é explícito e está publicado
+    na própria página.
+    """
+    estado = semente & MASCARA
+
+    def proximo():
+        nonlocal estado
+        estado = (estado + 0x6D2B79F5) & MASCARA
+        t = estado
+        t = ((t ^ (t >> 15)) * (t | 1)) & MASCARA
+        t = (t ^ (t + ((t ^ (t >> 7)) * (t | 61)) & MASCARA)) & MASCARA
+        return ((t ^ (t >> 14)) & MASCARA) / 4294967296.0
+
+    return proximo
+
+
+def dezenas_aleatorias(semente, quantidade, lo, hi):
+    """Embaralha lo..hi com Fisher-Yates e devolve as primeiras, ordenadas."""
+    sortear = mulberry32(semente)
+    baralho = list(range(lo, hi + 1))
+    for i in range(len(baralho) - 1, 0, -1):
+        j = int(sortear() * (i + 1))
+        baralho[i], baralho[j] = baralho[j], baralho[i]
+    return sorted(baralho[:quantidade])

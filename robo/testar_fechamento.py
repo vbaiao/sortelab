@@ -83,11 +83,40 @@ def testar_garantias():
                        f"garante {g['acertos']} acertos")
 
 
+def testar_prng():
+    a = F.mulberry32(3757)
+    b = F.mulberry32(3757)
+    checar([a() for _ in range(5)] == [b() for _ in range(5)],
+           "mulberry32: mesma semente, mesma sequencia")
+
+    c = F.mulberry32(3758)
+    checar(F.mulberry32(3757)() != c(),
+           "mulberry32: sementes diferentes, valores diferentes")
+
+    valores = [F.mulberry32(1)() for _ in range(1)]
+    checar(all(0.0 <= v < 1.0 for v in valores),
+           "mulberry32: valores no intervalo [0, 1)")
+
+
+def testar_dezenas_aleatorias():
+    d = F.dezenas_aleatorias(3757, 18, 1, 25)
+    checar(len(d) == 18, "sorteio: devolve 18 dezenas")
+    checar(len(set(d)) == 18, "sorteio: sem repeticao")
+    checar(d == sorted(d), "sorteio: vem ordenado")
+    checar(all(1 <= n <= 25 for n in d), "sorteio: dentro de 1..25")
+    checar(d == F.dezenas_aleatorias(3757, 18, 1, 25),
+           "sorteio: mesma semente devolve o mesmo resultado")
+    checar(d != F.dezenas_aleatorias(3758, 18, 1, 25),
+           "sorteio: semente diferente devolve resultado diferente")
+
+
 if __name__ == "__main__":
     testar_estrutura()
     testar_montagem()
     testar_montagem_recusa_entrada_ruim()
     testar_avaliacao()
+    testar_prng()
+    testar_dezenas_aleatorias()
     testar_garantias()
     print()
     if falhas:
