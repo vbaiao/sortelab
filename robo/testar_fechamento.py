@@ -6,11 +6,13 @@ bruta, cenário por cenário — se um padrão falhar, o teste quebra e a
 publicação para.
 """
 
+import json
 import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+import campeao
 import fechamento as F
 
 falhas = []
@@ -130,6 +132,27 @@ def testar_valores_congelados():
            "sorteio: semente=99999 gera [2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 17, 18, 20, 21, 22, 23, 24]")
 
 
+def testar_pool_campeao():
+    caminho = os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "dados", "lotofacil.json")
+    with open(caminho, encoding="utf-8") as f:
+        concursos = json.load(f)["concursos"]
+
+    quinze = campeao.jogo_campeao("lotofacil", concursos)
+    dezoito = campeao.pool_campeao("lotofacil", concursos, 18)
+
+    checar(len(dezoito) == 18, "pool: devolve 18 dezenas")
+    checar(len(set(dezoito)) == 18, "pool: sem repeticao")
+    checar(dezoito == sorted(dezoito), "pool: vem ordenado")
+    checar(set(quinze) <= set(dezoito),
+           "pool: contem as 15 do jogo campeao")
+    checar(all(1 <= n <= 25 for n in dezoito), "pool: dentro de 1..25")
+    checar(dezoito == campeao.pool_campeao("lotofacil", concursos, 18),
+           "pool: e deterministico")
+    checar(campeao.pool_campeao("lotofacil", concursos, 15) == sorted(quinze),
+           "pool: para tamanho 15 devolve o proprio jogo campeao")
+
+
 if __name__ == "__main__":
     testar_estrutura()
     testar_montagem()
@@ -139,6 +162,7 @@ if __name__ == "__main__":
     testar_dezenas_aleatorias()
     testar_valores_congelados()
     testar_garantias()
+    testar_pool_campeao()
     print()
     if falhas:
         print(f"{len(falhas)} FALHA(S).")

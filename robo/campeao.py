@@ -115,3 +115,24 @@ def jogo_campeao(slug, concursos):
         if pontos > melhor_pontos:
             melhor, melhor_pontos = jogo, pontos
     return melhor or sorted(ranking[:k])
+
+
+def pool_campeao(slug, concursos, tamanho):
+    """As dezenas do jogo campeão mais as seguintes do ranking, até `tamanho`.
+
+    Usado pelo fechamento, que precisa de mais dezenas do que cabem num jogo.
+    Determinístico: mesma entrada, mesma saída, sempre. Para `tamanho` igual
+    ao tamanho da aposta devolve o próprio jogo campeão.
+    """
+    base = sorted(jogo_campeao(slug, concursos))
+    if tamanho <= len(base):
+        return base
+    cfg = FICHAS[slug]
+    trincas = [(c[0], c[1], c[2]) for c in concursos]
+    score, universo = _score(cfg, trincas)
+    escolhidas = set(base)
+    for n in sorted(universo, key=lambda x: (-score[x], x)):
+        if len(escolhidas) >= tamanho:
+            break
+        escolhidas.add(n)
+    return sorted(escolhidas)
