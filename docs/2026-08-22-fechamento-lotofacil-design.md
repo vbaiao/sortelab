@@ -205,8 +205,13 @@ O teste de paridade Python ↔ JS cobre esse gerador.
 ```
 
 **A conta acumulada não é gravada.** Gasto, retorno e saldo são calculados na
-hora, a partir do histórico, tanto na página quanto no robô. Dado derivado
-gravado sai do ar com o tempo; recalcular é barato e nunca diverge.
+hora pela página, a partir do histórico. Dado derivado gravado sai do ar com o
+tempo; recalcular é barato e nunca diverge. O robô não calcula a conta — ele
+não exibe nada, só grava o histórico de onde ela sai.
+
+Concursos cujo rateio não veio entram no gasto mas não no retorno, o que
+distorce o saldo. A página conta esses casos e informa quantos são, em vez de
+apresentar um saldo silenciosamente errado.
 
 O gasto por sorteio é `PADROES[preset].custo` por lado — hoje R$ 17,50.
 
