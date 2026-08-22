@@ -110,6 +110,26 @@ def testar_dezenas_aleatorias():
            "sorteio: semente diferente devolve resultado diferente")
 
 
+def testar_valores_congelados():
+    """Verifica valores congelados da geradora — o contrato com o JS e o placar.
+
+    A semente determina a sequência de números, e o lado aleatório do placar é
+    uma aposta pública: comparamos seu desempenho com o fechamento estatístico
+    jogo a jogo. Se este teste falha, ou o gerador mudou, ou a porta JavaScript
+    divergiu — e em ambos os casos o histórico já publicado na página está em
+    risco. Por isso estes valores não podem mudar sem justificativa externalizada.
+    """
+    checar(F.dezenas_aleatorias(1, 18, 1, 25) ==
+           [2, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20, 23, 24, 25],
+           "sorteio: semente=1 gera [2, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20, 23, 24, 25]")
+    checar(F.dezenas_aleatorias(3757, 18, 1, 25) ==
+           [1, 2, 3, 4, 5, 6, 7, 11, 12, 13, 16, 18, 19, 20, 22, 23, 24, 25],
+           "sorteio: semente=3757 gera [1, 2, 3, 4, 5, 6, 7, 11, 12, 13, 16, 18, 19, 20, 22, 23, 24, 25]")
+    checar(F.dezenas_aleatorias(99999, 18, 1, 25) ==
+           [2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 17, 18, 20, 21, 22, 23, 24],
+           "sorteio: semente=99999 gera [2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 17, 18, 20, 21, 22, 23, 24]")
+
+
 if __name__ == "__main__":
     testar_estrutura()
     testar_montagem()
@@ -117,6 +137,7 @@ if __name__ == "__main__":
     testar_avaliacao()
     testar_prng()
     testar_dezenas_aleatorias()
+    testar_valores_congelados()
     testar_garantias()
     print()
     if falhas:
