@@ -43,6 +43,21 @@ PADROES = {
                       {"saem": 14, "acertos": 12},
                       {"saem": 15, "acertos": 13}],
     },
+    # Sete descartes de dois, achados por busca gulosa (robo/gerar_padroes.py).
+    # Não têm forma regular: a lista abaixo é uma constante congelada e
+    # verificada, não uma regra que dê para deduzir de cabeça.
+    "17-7": {
+        "dezenas": 17,
+        "descartes": [[0, 1], [2, 3], [4, 5], [6, 7], [8, 9], [10, 11], [0, 12]],
+        "garantias": [{"saem": 12, "acertos": 11}],
+    },
+    # Doze descartes de três. Garante prêmio quando só 12 das suas 18 saem —
+    # o que acontece uma vez a cada quatro sorteios.
+    "18-12": {
+        "dezenas": 18,
+        "descartes": [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9, 10, 11], [12, 13, 14], [15, 16, 17], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 1, 5], [0, 1, 8], [2, 3, 4]],
+        "garantias": [{"saem": 12, "acertos": 11}],
+    },
 }
 
 
