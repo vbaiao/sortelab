@@ -153,6 +153,51 @@ def testar_pool_campeao():
            "pool: para tamanho 15 devolve o proprio jogo campeao")
 
 
+def testar_pool_campeao_segue_o_ranking():
+    """As dezenas extras do pool são as melhores do ranking, não quaisquer.
+
+    O esperado é recalculado aqui, não congelado num valor fixo:
+    dados/lotofacil.json ganha concursos novos toda semana, o que muda os
+    escores e portanto quais dezenas entram no pool. Um valor fixo quebraria
+    sozinho na próxima rodada do robô. Por isso o teste refaz o mesmo ranking
+    que pool_campeao usa por dentro (mesmo _score, mesmo critério de
+    desempate) e confere que as dezenas acrescentadas são exatamente o topo
+    desse ranking.
+    """
+    caminho = os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "dados", "lotofacil.json")
+    with open(caminho, encoding="utf-8") as f:
+        concursos = json.load(f)["concursos"]
+
+    quinze = campeao.jogo_campeao("lotofacil", concursos)
+    cfg = campeao.FICHAS["lotofacil"]
+    trincas = [(c[0], c[1], c[2]) for c in concursos]
+    score, universo = campeao._score(cfg, trincas)
+    fora_do_campeao = sorted(
+        (n for n in universo if n not in set(quinze)),
+        key=lambda n: (-score[n], n))
+
+    dezoito = campeao.pool_campeao("lotofacil", concursos, 18)
+    extras_18 = sorted(set(dezoito) - set(quinze))
+    esperado_18 = sorted(fora_do_campeao[:3])
+    checar(len(extras_18) == 3,
+           f"pool18: acrescenta exatamente 3 dezenas "
+           f"(esperado 3, veio {len(extras_18)}: {extras_18})")
+    checar(extras_18 == esperado_18,
+           f"pool18: as extras sao as 3 melhores do ranking fora do campeao "
+           f"(esperado {esperado_18}, veio {extras_18})")
+
+    dezesseis = campeao.pool_campeao("lotofacil", concursos, 16)
+    extras_16 = sorted(set(dezesseis) - set(quinze))
+    esperado_16 = sorted(fora_do_campeao[:1])
+    checar(len(extras_16) == 1,
+           f"pool16: acrescenta exatamente 1 dezena "
+           f"(esperado 1, veio {len(extras_16)}: {extras_16})")
+    checar(extras_16 == esperado_16,
+           f"pool16: a extra e a melhor do ranking fora do campeao "
+           f"(esperado {esperado_16}, veio {extras_16})")
+
+
 if __name__ == "__main__":
     testar_estrutura()
     testar_montagem()
@@ -163,6 +208,7 @@ if __name__ == "__main__":
     testar_valores_congelados()
     testar_garantias()
     testar_pool_campeao()
+    testar_pool_campeao_segue_o_ranking()
     print()
     if falhas:
         print(f"{len(falhas)} FALHA(S).")
