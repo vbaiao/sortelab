@@ -67,7 +67,7 @@ TEMPLATE = """<!DOCTYPE html>
 <header class="topo">
   <div class="miolo">
     <a class="marca" href="/"><span class="sorte">Sorte</span><span class="labs">Labs</span></a>
-    <nav><a href="desafio.html">Desafio</a><a href="/">Todas as loterias</a></nav>
+    <nav><a href="desafio.html">Desafio</a><a href="fechamento.html">Fechamento</a><a href="/">Todas as loterias</a></nav>
   </div>
 </header>
 
@@ -308,7 +308,7 @@ def gerar():
         # A home entra como "/" e não "/index.html": mandar o arquivo fazia o
         # Google tratá-lo como página alternativa da raiz, e ele avisava
         # "página alternativa com tag canônica adequada".
-        for u in ["", "desafio.html"] + urls:
+        for u in ["", "desafio.html", "fechamento.html"] + urls:
             f.write(f"  <url><loc>https://sortelabs.com.br/{u}"
                     f"</loc></url>\n")
         f.write("</urlset>\n")

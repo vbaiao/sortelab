@@ -35,6 +35,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Conferir as garantias do fechamento
+        run: python robo/testar_fechamento.py
+
       - name: Buscar concursos novos na API da Caixa
         run: python robo/atualizar.py
 
