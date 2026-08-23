@@ -51,7 +51,34 @@
     const pendente = estado.fechamento && estado.fechamento.pendente;
     if (!pendente) return;
     $("padrao").value = PRESET_PLACAR;
-    $("dezenas").value = pendente.campeao.dezenas.map(dez).join(" ");
+    escreverDezenas(pendente.campeao.dezenas);
+    montarFechamento();
+  }
+
+  function escreverDezenas(lista) {
+    $("dezenas").value = lista.map(dez).join(" ");
+  }
+
+  /* Cada padrão pede uma quantidade fixa de dezenas. Trocar o padrão sem
+     ajustar o campo deixava o visitante encarando "o padrão 17-7 precisa de
+     exatamente 17 dezenas" e adivinhando qual apagar. Aqui a lista se ajusta
+     sozinha: sobrando, corta as últimas; faltando, completa com as melhores
+     do campeão e, se ainda faltar, com as menores dezenas livres. */
+  function ajustarAoPadrao() {
+    const alvo = FZ.PADROES[$("padrao").value].dezenas;
+    const atuais = lerDezenas($("dezenas").value).filter(n => n >= 1 && n <= 25);
+    const escolhidas = atuais.slice(0, alvo);
+
+    if (escolhidas.length < alvo) {
+      const pendente = estado.fechamento && estado.fechamento.pendente;
+      const reserva = (pendente ? pendente.campeao.dezenas : [])
+        .concat(Array.from({ length: 25 }, (_, i) => i + 1));
+      for (const n of reserva) {
+        if (escolhidas.length >= alvo) break;
+        if (!escolhidas.includes(n)) escolhidas.push(n);
+      }
+    }
+    escreverDezenas(escolhidas.sort((a, b) => a - b));
     montarFechamento();
   }
 
@@ -148,4 +175,5 @@
 
   $("btn-montar").addEventListener("click", montarFechamento);
   $("btn-usar-campeao").addEventListener("click", usarDoCampeao);
+  $("padrao").addEventListener("change", ajustarAoPadrao);
 })();

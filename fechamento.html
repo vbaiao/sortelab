@@ -69,16 +69,24 @@ coisa ir ao ar.</p>
 <div class="rolagem-x">
 <table class="tabela">
   <thead>
-    <tr><th>Dezenas</th><th>Jogos</th><th>Custo</th><th>Garantia</th></tr>
+    <tr><th>Dezenas</th><th>Jogos</th><th>Custo</th><th>Se saírem</th><th>Você garante</th></tr>
   </thead>
   <tbody>
-    <tr><td>18</td><td>5</td><td>R$ 17,50</td><td>11 acertos se 13 das suas saírem</td></tr>
-    <tr><td>18</td><td>6</td><td>R$ 21,00</td><td>11 se 13 · 13 acertos se as 15 saírem</td></tr>
-    <tr><td>17</td><td>7</td><td>R$ 24,50</td><td>11 acertos se 12 das suas saírem</td></tr>
-    <tr><td>18</td><td>12</td><td>R$ 42,00</td><td>11 acertos se só 12 saírem</td></tr>
+    <tr><td>18</td><td>5</td><td>R$ 17,50</td><td>13 das suas 18</td><td>um jogo com 11 acertos</td></tr>
+    <tr><td>18</td><td>6</td><td>R$ 21,00</td><td>13 das suas 18</td><td>um jogo com 11 acertos</td></tr>
+    <tr><td>17</td><td>7</td><td>R$ 24,50</td><td>12 das suas 17</td><td>um jogo com 11 acertos</td></tr>
+    <tr><td>18</td><td>12</td><td>R$ 42,00</td><td>12 das suas 18</td><td>um jogo com 11 acertos</td></tr>
   </tbody>
 </table>
 </div>
+
+<p>Repare que o de 12 jogos e o de 7 jogos pedem menos: bastam 12 dezenas
+certas em vez de 13. Por isso custam mais.</p>
+
+<p>E os dois de 18 dezenas garantem a mesma coisa, mas não são iguais. A
+diferença aparece quando você acerta muito: se as 15 dezenas sorteadas
+caírem todas dentro das suas 18, o de 5 jogos chega a 12 acertos e o de
+6 jogos chega a 13.</p>
 
 <h3>Agora a parte que ninguém conta</h3>
 
@@ -224,7 +232,14 @@ vez de inventar.</p>
 lado aleatório são sorteadas com uma semente igual ao número do concurso
 — é por isso que, no card acima, a semente ao lado de "Aleatório" é
 sempre o mesmo número do concurso cravado. Qualquer pessoa reproduz e
-confere que o palpite foi cravado antes, e não escolhido depois:</p>
+confere que o palpite foi cravado antes, e não escolhido depois.</p>
+
+<details>
+<summary>Ver o código que sorteia as dezenas</summary>
+
+<p class="dica">Só interessa a quem quiser refazer a conta. Cole num
+console de navegador e chame <em>dezenasAleatorias</em> com o número do
+concurso — tem que sair exatamente as 18 dezenas que estão no card.</p>
 
 <pre class="rolagem-x"><code>function mulberry32(semente) {
   let estado = semente &gt;&gt;&gt; 0;
@@ -248,6 +263,7 @@ function dezenasAleatorias(semente) {
   }
   return baralho.slice(0, 18).sort((a, b) =&gt; a - b);
 }</code></pre>
+</details>
 
 </section>
 
