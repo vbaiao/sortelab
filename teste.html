@@ -78,6 +78,10 @@ fetch("dados/gabarito_teste.json").then(r => r.json()).then(async gabarito => {
         "fechamento " + pid + ": acertos batem com o Python");
     log(Math.abs(nota.retorno - esperado.avaliacao.retorno) < 0.001,
         "fechamento " + pid + ": retorno R$ " + nota.retorno);
+    // A garantia e o texto publicado na pagina: se a copia em JS divergir da
+    // provada por forca bruta em robo/fechamento.py, e aqui que isso aparece.
+    log(JSON.stringify(FZ.PADROES[pid].garantias) === JSON.stringify(esperado.garantias),
+        "fechamento " + pid + ": garantias batem com o Python");
   }
 
   for (const semente of Object.keys(gf.sorteios)) {
@@ -85,6 +89,41 @@ fetch("dados/gabarito_teste.json").then(r => r.json()).then(async gabarito => {
     log(JSON.stringify(saiu) === JSON.stringify(gf.sorteios[semente]),
         "sorteio semente " + semente + ": bate com o Python");
   }
+
+  // contaAcumulada: historico sintetico feito na mao, sem depender de dados
+  // reais. E o unico export cujo trabalho e evitar que o placar publico se
+  // engane sozinho — precisa de teste proprio. Os dois lados divergem de
+  // proposito (retorno e semRateio diferentes) para pegar um copia-e-cola
+  // trocado entre campeao e aleatorio.
+  const historicoTeste = [
+    { campeao: { retorno: 21.0 }, aleatorio: { retorno: null } },
+    { campeao: { retorno: 7.0 },  aleatorio: { retorno: null } },
+    { campeao: { retorno: null }, aleatorio: { retorno: 14.0 } },
+    { campeao: { retorno: 7.0 },  aleatorio: { retorno: 7.0 } },
+  ];
+  // Contas na mao para o padrao 18-5 (custo R$ 17,50, 4 linhas no historico):
+  //   campeao:   retornos [21, 7, null, 7]  -> soma 35, 1 linha sem rateio
+  //   aleatorio: retornos [null, null, 14, 7] -> soma 21, 2 linhas sem rateio
+  //   gasto conta as 4 linhas dos dois lados, inclusive as com retorno null
+  //   -> gasto = 4 * 17.5 = 70 para os dois lados.
+  const conta = FZ.contaAcumulada(historicoTeste, "18-5");
+  log(conta.sorteios === 4, "contaAcumulada: sorteios = tamanho do historico");
+  log(Math.abs(conta.campeao.gasto - 70.0) < 0.001,
+      "contaAcumulada campeao: gasto conta TODAS as linhas, com ou sem rateio");
+  log(Math.abs(conta.campeao.retorno - 35.0) < 0.001,
+      "contaAcumulada campeao: retorno soma so as linhas com rateio");
+  log(Math.abs(conta.campeao.saldo - (-35.0)) < 0.001,
+      "contaAcumulada campeao: saldo = retorno - gasto");
+  log(conta.campeao.semRateio === 1,
+      "contaAcumulada campeao: semRateio conta as linhas com retorno null");
+  log(Math.abs(conta.aleatorio.gasto - 70.0) < 0.001,
+      "contaAcumulada aleatorio: gasto conta TODAS as linhas, com ou sem rateio");
+  log(Math.abs(conta.aleatorio.retorno - 21.0) < 0.001,
+      "contaAcumulada aleatorio: retorno soma so as linhas com rateio");
+  log(Math.abs(conta.aleatorio.saldo - (-49.0)) < 0.001,
+      "contaAcumulada aleatorio: saldo = retorno - gasto");
+  log(conta.aleatorio.semRateio === 2,
+      "contaAcumulada aleatorio: semRateio conta as linhas com retorno null");
 
   const erros = linhas.filter(l => l.includes("erro")).length;
   linhas.unshift("<h2>" + (erros ? erros + " ERRO(S)" : "TUDO OK ✔") + "</h2>");

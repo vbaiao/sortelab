@@ -226,6 +226,10 @@ if __name__ == "__main__":
             "jogos": jogos,
             "custo": F.custo_do_padrao(pid),
             "avaliacao": F.avaliar(jogos, resultado, rateio),
+            # A garantia e o texto que a pagina publica; sem isso no
+            # gabarito, a copia em JS poderia divergir da garantia provada
+            # por forca bruta em robo/fechamento.py sem nada acusar.
+            "garantias": F.PADROES[pid]["garantias"],
         }
     for semente in (1, 3757, 99999):
         gabarito["sorteios"][str(semente)] = F.dezenas_aleatorias(
