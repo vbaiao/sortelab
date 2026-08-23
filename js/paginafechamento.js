@@ -10,7 +10,7 @@
     Math.abs(v).toFixed(2).replace(".", ",");
   const dez = n => String(n).padStart(2, "0");
 
-  let estado = { fechamento: null };
+  let estado = { fechamento: null, ultimoConcurso: null };
 
   function lerDezenas(texto) {
     const nums = (texto.match(/\d+/g) || []).map(Number);
@@ -101,9 +101,23 @@
       "<tr><td colspan='8'>Nenhum sorteio conferido ainda.</td></tr>";
 
     if (dados.pendente) {
-      $("pendente").innerHTML =
-        "<p>Cravado para o concurso <strong>" + (dados.pendente.apos + 1) +
-        "</strong>, antes do sorteio:</p>" +
+      const alvo = dados.pendente.apos + 1;
+      /* O robô roda por cron do GitHub Actions, que descarta boa parte dos
+         agendamentos — já medimos 6 execuções de 48 num dia. Então existe
+         uma janela real, às vezes de horas, entre o resultado sair e o
+         palpite ser conferido. Dizer "antes do sorteio" nessa janela é
+         afirmar algo que o leitor sabe ser falso, justamente na página que
+         pede confiança. Quando o sorteio já saiu, a página diz isso. */
+      const jaSorteou = estado.ultimoConcurso !== null &&
+                        estado.ultimoConcurso >= alvo;
+      const situacao = jaSorteou
+        ? "<p>O concurso <strong>" + alvo + "</strong> já foi sorteado. " +
+          "Estas dezenas foram cravadas antes disso e continuam aqui, " +
+          "intactas, esperando o robô conferir — ele roda de tempos em " +
+          "tempos e a linha entra no placar assim que ele passar.</p>"
+        : "<p>Cravado para o concurso <strong>" + alvo + "</strong>, que " +
+          "ainda não foi sorteado:</p>";
+      $("pendente").innerHTML = situacao +
         "<p><strong>Campeão:</strong> " +
         dados.pendente.campeao.dezenas.map(dez).join(" ") + "</p>" +
         "<p><strong>Aleatório</strong> (semente " +
@@ -160,6 +174,20 @@
     $("conta-ressalva").textContent = msg + " Tente recarregar a página em instantes.";
   }
 
+  /* Descobre o último concurso já sorteado, só para saber se o pendente está
+     esperando conferência. Falha aqui não é problema: sem o número, a página
+     simplesmente não afirma nada sobre o sorteio ter saído. */
+  function buscarUltimoConcurso() {
+    return fetch("dados/lotofacil.json")
+      .then(r => (r.ok ? r.json() : null))
+      .then(base => {
+        const lista = base && base.concursos;
+        estado.ultimoConcurso = lista && lista.length
+          ? lista[lista.length - 1][0] : null;
+      })
+      .catch(() => { estado.ultimoConcurso = null; });
+  }
+
   fetch("dados/fechamento.json")
     .then(r => {
       if (!r.ok) throw new Error("HTTP " + r.status);
@@ -167,9 +195,10 @@
     })
     .then(dados => {
       estado.fechamento = dados;
-      desenharPlacar();
       desenharConta();
       usarDoCampeao();
+      // O placar depende do último concurso, então espera essa consulta.
+      return buscarUltimoConcurso().then(desenharPlacar);
     })
     .catch(mostrarFalhaDeCarga);
 
