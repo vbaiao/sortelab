@@ -88,11 +88,16 @@
     const dados = estado.fechamento;
     if (!dados) return;
     const conta = FZ.contaAcumulada(dados.historico, dados.preset);
-    const linha = (nome, c) =>
-      "<tr><th>" + nome + "</th><td>" + dinheiro(c.gasto) + "</td><td>" +
-      dinheiro(c.retorno) + "</td><td class='" +
-      (c.saldo < 0 ? "negativo" : "positivo") + "'>" +
-      dinheiro(c.saldo) + "</td></tr>";
+    const linha = (nome, c) => {
+      // Zero não é nem ganho nem perda — só vermelho quando saldo < 0 e só
+      // verde quando saldo > 0. Colorir um "ainda não aconteceu nada" de
+      // verde seria maquiagem, e esta página existe para não maquiar.
+      const classe = c.saldo > 0 ? " class='positivo'" :
+                     c.saldo < 0 ? " class='negativo'" : "";
+      return "<tr><th>" + nome + "</th><td>" + dinheiro(c.gasto) + "</td><td>" +
+        dinheiro(c.retorno) + "</td><td" + classe + ">" +
+        dinheiro(c.saldo) + "</td></tr>";
+    };
     $("conta-corpo").innerHTML =
       linha("Campeão", conta.campeao) + linha("Aleatório", conta.aleatorio);
     $("conta-sorteios").textContent = conta.sorteios;
@@ -113,18 +118,32 @@
         : "");
   }
 
+  // Se os dados não chegarem — o robô escreve este arquivo a cada sorteio,
+  // então um 404 ou um JSON quebrado é uma possibilidade real, não só
+  // teórica — as quatro áreas que dependem dele têm que dizer a mesma
+  // coisa: que não deu para carregar agora. Uma tabela em branco ao lado
+  // de "não carregou" pareceria "não há nada a mostrar", quando na
+  // verdade é o oposto: os dados existem, só não chegaram.
+  function mostrarFalhaDeCarga() {
+    const msg = "Não foi possível carregar os dados agora.";
+    $("pendente").innerHTML = "<p>" + msg + "</p>";
+    $("placar-corpo").innerHTML = "<tr><td colspan='8'>" + msg + "</td></tr>";
+    $("conta-corpo").innerHTML = "<tr><td colspan='4'>" + msg + "</td></tr>";
+    $("conta-ressalva").textContent = msg + " Tente recarregar a página em instantes.";
+  }
+
   fetch("dados/fechamento.json")
-    .then(r => r.json())
+    .then(r => {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
     .then(dados => {
       estado.fechamento = dados;
       desenharPlacar();
       desenharConta();
       usarDoCampeao();
     })
-    .catch(() => {
-      $("placar-corpo").innerHTML =
-        "<tr><td colspan='8'>Não foi possível carregar o placar agora.</td></tr>";
-    });
+    .catch(mostrarFalhaDeCarga);
 
   $("btn-montar").addEventListener("click", montarFechamento);
   $("btn-usar-campeao").addEventListener("click", usarDoCampeao);
