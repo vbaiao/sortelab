@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-site-verification" content="1ASDodTUQNNEFQTdYF4TCvACuHrtQRBXcfsDynb9Msk" />
+<title>Fechamento da Lotofácil — SorteLabs</title>
+<meta name="description" content="O que é um fechamento na Lotofácil, uma ferramenta para montar o seu e o placar público que mostra se ele vence o acaso.">
+<meta property="og:title" content="Fechamento da Lotofácil — SorteLabs">
+<meta property="og:description" content="Monte o seu fechamento e acompanhe o placar público: fechamento estatístico contra dezenas sorteadas, sem esconder o resultado.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://sortelabs.com.br/fechamento.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilo.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230A0D12'/><rect x='18' y='18' width='26' height='26' rx='6' fill='%23CF9F3F'/><rect x='56' y='18' width='26' height='26' rx='6' fill='%23222A35'/><rect x='18' y='56' width='26' height='26' rx='6' fill='%23222A35'/><rect x='56' y='56' width='26' height='26' rx='6' fill='%23CF9F3F'/></svg>">
+
+</head>
+<body>
+
+<header class="topo">
+  <div class="miolo">
+    <a class="marca" href="/"><span class="sorte">Sorte</span><span class="labs">Labs</span></a>
+    <nav><a href="desafio.html">Desafio</a> <a href="/">Todas as loterias</a></nav>
+  </div>
+</header>
+
+<div class="cabecalho-pagina">
+  <div class="miolo">
+    <span class="rotulo-secao">Lotofácil</span>
+    <h1>Fechamento da Lotofácil</h1>
+    <p>O que é um fechamento, uma ferramenta para montar o seu e um placar
+    público comparando o fechamento do jogo campeão contra dezenas
+    sorteadas — para você ver se a estatística realmente vence o acaso.</p>
+  </div>
+</div>
+
+<main class="miolo painel">
+
+<section id="o-que-e" class="revelar">
+
+<h2>O que é um fechamento</h2>
+
+<p>Na Lotofácil saem 15 números de 25. O seu jogo também tem 15. Ou seja:
+você é obrigado a deixar 10 números de fora, e se deixar de fora os
+errados, já era.</p>
+
+<p>A ideia do fechamento é escolher <strong>18 números</strong> em vez de 15.
+Aí você só deixa 7 de fora — bem mais seguro. O problema é que o volante
+só aceita 15, então não cabem 18 num jogo só.</p>
+
+<p>A solução é fazer vários jogos. <strong>Cada jogo pega 15 dos seus 18 e
+descarta 3.</strong> E aqui está o pulo do gato: se cada jogo descartar um
+trio diferente, os descartes ficam espalhados.</p>
+
+<p>Suponha que dos seus 18 números, 13 vão sair e 5 são lixo. Você não sabe
+quais são os 5 lixos. Mas <strong>é impossível 5 números se esconderem em
+6 trios diferentes ao mesmo tempo</strong> — pelo menos um trio vai ter
+lixo dentro. E o jogo que descarta esse trio está descartando lixo. Esse
+é o seu jogo bom.</p>
+
+<p>Não é sorte, é contagem. Dá para conferir cenário por cenário — e é
+exatamente o que o teste automático deste site faz antes de qualquer
+coisa ir ao ar.</p>
+
+<h3>Os fechamentos que montamos aqui</h3>
+
+<div class="rolagem-x">
+<table class="tabela">
+  <thead>
+    <tr><th>Dezenas</th><th>Jogos</th><th>Custo</th><th>Garantia</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>18</td><td>5</td><td>R$ 17,50</td><td>11 acertos se 13 das suas saírem</td></tr>
+    <tr><td>18</td><td>6</td><td>R$ 21,00</td><td>11 se 13 · 13 acertos se as 15 saírem</td></tr>
+    <tr><td>17</td><td>7</td><td>R$ 24,50</td><td>11 acertos se 12 das suas saírem</td></tr>
+    <tr><td>18</td><td>12</td><td>R$ 42,00</td><td>11 acertos se só 12 saírem</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Agora a parte que ninguém conta</h3>
+
+<div class="aviso-obs"><strong>Fechamento não aumenta a sua chance de
+ganhar. Nenhum método aumenta.</strong> Todo jogo de 15 dezenas acerta 9 números
+em média, seja ele escolhido por estatística, por sonho ou por sorteio.
+Isso é conta fechada, não opinião.</div>
+
+<p>E a garantia soa melhor do que é. <strong>Garantir 11 acertos é garantir
+uns R$ 7.</strong> Gastar R$ 17,50 para ter uma chance em 16 de ganhar
+R$ 7 é péssimo negócio, e a gente não vai fingir o contrário.</p>
+
+<p>O que o fechamento faz de verdade é <strong>concentrar</strong>. Jogo
+espalhado raspa sempre e nunca acerta. Fechamento raspa pouco, mas quando
+acerta, acerta em vários jogos de uma vez. Muda o formato do resultado,
+não o tamanho da chance.</p>
+
+<h3>Com que frequência cada faixa acontece</h3>
+
+<div class="rolagem-x">
+<table class="tabela">
+  <thead><tr><th>Acertos</th><th>Acontece</th></tr></thead>
+  <tbody>
+    <tr><td>11</td><td>1 a cada 11 jogos</td></tr>
+    <tr><td>12</td><td>1 a cada 60</td></tr>
+    <tr><td>13</td><td>1 a cada 692</td></tr>
+    <tr><td>14</td><td>1 a cada 21.792</td></tr>
+    <tr><td>15</td><td>1 a cada 3.268.760</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Se você costuma fazer 11 e 12 e sente que "faltou pouco": não faltou.
+É assim que o jogo foi desenhado. A distância de 12 para 15 é de 60 para
+3,2 milhões.</p>
+
+</section>
+
+<section id="montador" class="revelar">
+
+<h2>Monte o seu fechamento</h2>
+
+<div class="cartao">
+  <form onsubmit="return false">
+    <div class="linha-campos">
+      <div class="campo">
+        <label for="padrao">Qual fechamento</label>
+        <select id="padrao">
+          <option value="18-5">18 dezenas em 5 jogos — R$ 17,50</option>
+          <option value="18-6">18 dezenas em 6 jogos — R$ 21,00</option>
+          <option value="17-7">17 dezenas em 7 jogos — R$ 24,50</option>
+          <option value="18-12">18 dezenas em 12 jogos — R$ 42,00</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="dezenas">Suas dezenas, separadas por espaço</label>
+        <input type="text" id="dezenas" inputmode="numeric"
+               autocomplete="off" placeholder="02 03 05 06 09 ...">
+      </div>
+    </div>
+    <div class="botoes">
+      <button class="botao" type="button" id="btn-montar">Montar fechamento</button>
+      <button class="botao secundario" type="button" id="btn-usar-campeao">Usar as do campeão</button>
+    </div>
+  </form>
+
+  <div id="saida-montagem"></div>
+</div>
+
+<p>As dezenas do campeão são as 15 do jogo campeão da Lotofácil mais as 3
+seguintes do ranking. É a mesma regra que o robô usa para cravar o palpite
+do placar aqui embaixo.</p>
+
+</section>
+
+<section id="placar" class="revelar">
+
+<h2>O placar público</h2>
+
+<p>A cada sorteio o robô crava dois fechamentos de 18 dezenas em 5 jogos,
+antes do resultado sair. Um monta as dezenas do jogo campeão; o outro,
+18 dezenas sorteadas. Os dois gastam os mesmos R$ 17,50.</p>
+
+<p>O placar existe para mostrar uma coisa: <strong>os dois empatam</strong>.
+Se a estatística funcionasse, o campeão abriria vantagem. Acompanhe e
+tire sua conclusão.</p>
+
+<div class="cartao" id="pendente"></div>
+
+<div class="rolagem-x">
+<table class="tabela">
+  <thead>
+    <tr>
+      <th rowspan="2">Concurso</th><th rowspan="2">Data</th>
+      <th colspan="3">Campeão</th><th colspan="3">Aleatório</th>
+    </tr>
+    <tr>
+      <th>Melhor</th><th>Premiados</th><th>Retorno</th>
+      <th>Melhor</th><th>Premiados</th><th>Retorno</th>
+    </tr>
+  </thead>
+  <tbody id="placar-corpo">
+    <tr><td colspan="8">Carregando…</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>"Melhor" é quantos acertos fez o melhor dos 5 jogos. "Premiados" é
+quantos dos 5 jogos bateram 11 acertos ou mais.</p>
+
+</section>
+
+<section id="conta" class="revelar">
+
+<h2>A conta, sem maquiagem</h2>
+
+<p>Somando tudo o que foi gasto e tudo o que voltou, ao longo de
+<span id="conta-sorteios">0</span> sorteios:</p>
+
+<div class="rolagem-x">
+<table class="tabela">
+  <thead>
+    <tr><th>Lado</th><th>Gasto</th><th>Retorno</th><th>Saldo</th></tr>
+  </thead>
+  <tbody id="conta-corpo"></tbody>
+</table>
+</div>
+
+<p id="conta-ressalva"></p>
+
+<p>Os valores de prêmio são os oficiais da Caixa para cada concurso, não
+estimativa. Quando a Caixa não publica o rateio, deixamos em branco em
+vez de inventar.</p>
+
+<h3>Como conferir o lado aleatório</h3>
+
+<p>Um placar assim só vale se ninguém puder trapacear. As 18 dezenas do
+lado aleatório são sorteadas com uma semente igual ao número do concurso
+— para o concurso 3757, a semente é 3757. Qualquer pessoa reproduz e
+confere que o palpite foi cravado antes, e não escolhido depois:</p>
+
+<pre class="rolagem-x"><code>function mulberry32(semente) {
+  let estado = semente &gt;&gt;&gt; 0;
+  return function () {
+    estado = (estado + 0x6D2B79F5) &gt;&gt;&gt; 0;
+    let t = estado;
+    t = Math.imul(t ^ (t &gt;&gt;&gt; 15), t | 1) &gt;&gt;&gt; 0;
+    t = (t ^ (t + Math.imul(t ^ (t &gt;&gt;&gt; 7), t | 61))) &gt;&gt;&gt; 0;
+    return ((t ^ (t &gt;&gt;&gt; 14)) &gt;&gt;&gt; 0) / 4294967296;
+  };
+}
+
+// Embaralha 1..25 com Fisher-Yates e pega as 18 primeiras, ordenadas.
+function dezenasAleatorias(semente) {
+  const sortear = mulberry32(semente);
+  const baralho = [];
+  for (let n = 1; n &lt;= 25; n++) baralho.push(n);
+  for (let i = baralho.length - 1; i &gt; 0; i--) {
+    const j = Math.floor(sortear() * (i + 1));
+    [baralho[i], baralho[j]] = [baralho[j], baralho[i]];
+  }
+  return baralho.slice(0, 18).sort((a, b) =&gt; a - b);
+}</code></pre>
+
+</section>
+
+</main>
+
+<footer class="rodape">
+  <div class="miolo">
+    <div class="selo-honesto"><strong>O selo honesto do SorteLabs:</strong>
+    nenhuma estatística aumenta sua chance de ganhar — este painel existe
+    justamente para provar isso em público. Jogue por diversão e com
+    moderação. Proibido para menores de 18 anos.</div>
+    <p>SorteLabs — <a href="/">todas as loterias</a> · dados oficiais
+    da Caixa. Este site não tem vínculo com a Caixa Econômica Federal e não
+    vende apostas.</p>
+  </div>
+</footer>
+
+<script src="js/interface.js"></script>
+<script src="js/fechamento.js"></script>
+<script src="js/paginafechamento.js"></script>
+<script data-goatcounter="https://sortelabs.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

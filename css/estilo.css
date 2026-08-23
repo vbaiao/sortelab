@@ -621,31 +621,31 @@ table.tabela { width: 100%; border-collapse: collapse; font-size: .9rem; }
 
 /* ---------------------------------------------------- desafio */
 
-.cabecalho-desafio {
+.cabecalho-desafio, .cabecalho-pagina {
   position: relative; overflow: hidden;
   background: var(--grafite); color: #fff;
   padding: 56px 0 46px;
 }
-.cabecalho-desafio::before {
+.cabecalho-desafio::before, .cabecalho-pagina::before {
   content: "";
   position: absolute; inset: -40% -10% auto -10%; height: 140%;
   background: radial-gradient(48% 60% at 25% 0%, rgba(207, 159, 63, .2) 0%, transparent 64%);
   pointer-events: none;
 }
-.cabecalho-desafio .miolo { position: relative; z-index: 1; }
-.cabecalho-desafio .rotulo-secao {
+.cabecalho-desafio .miolo, .cabecalho-pagina .miolo { position: relative; z-index: 1; }
+.cabecalho-desafio .rotulo-secao, .cabecalho-pagina .rotulo-secao {
   display: block;
   font-family: var(--dados); font-size: .71rem; font-weight: 600;
   text-transform: uppercase; letter-spacing: .17em;
   color: var(--ouro); margin-bottom: 12px;
 }
-.cabecalho-desafio h1 {
+.cabecalho-desafio h1, .cabecalho-pagina h1 {
   font-family: var(--display); font-weight: 800;
   font-size: clamp(2rem, 6vw, 2.9rem);
   letter-spacing: -.04em; line-height: 1.02;
   margin: 0 0 14px;
 }
-.cabecalho-desafio p { max-width: 62ch; margin: 0; color: rgba(255, 255, 255, .72); }
+.cabecalho-desafio p, .cabecalho-pagina p { max-width: 62ch; margin: 0; color: rgba(255, 255, 255, .72); }
 
 .secao-loteria {
   background: var(--superficie);
@@ -745,3 +745,17 @@ table.hist { width: 100%; border-collapse: collapse; font-size: .89rem; }
   .revelar { opacity: 1; transform: none; }
   .card-loteria:hover, .botao:hover, .botao-claro:hover { transform: none; }
 }
+
+/* ---------------------------------------------- fechamento da Lotofácil */
+
+.jogos {
+  margin: 0; padding-left: 1.7em;
+  font-family: var(--dados); font-size: .92rem; line-height: 1.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.garantias { margin: 0 0 16px; padding-left: 1.2em; font-size: .93rem; }
+.garantias li { margin-bottom: 5px; }
+
+.tabela td.negativo { color: var(--alerta); font-weight: 600; }
+.tabela td.positivo { color: var(--cor); font-weight: 600; }
