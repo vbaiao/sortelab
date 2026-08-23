@@ -8,12 +8,15 @@ publicação para.
 
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import campeao
 import fechamento as F
+
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 falhas = []
 
@@ -198,6 +201,78 @@ def testar_pool_campeao_segue_o_ranking():
            f"(esperado {esperado_16}, veio {extras_16})")
 
 
+def _ler_padroes_do_js():
+    """Extrai a tabela PADROES de js/fechamento.js lendo o arquivo como texto.
+
+    Não há Node aqui, então não dá para executar o JS. Mas a tabela é dado
+    literal, e ler dado literal é trabalho de leitor de texto. Se o formato
+    do arquivo mudar a ponto desta leitura falhar, o teste quebra — o que é
+    o comportamento certo: quebrar alto é melhor que aprovar no escuro.
+    """
+    with open(os.path.join(RAIZ, "js", "fechamento.js"), encoding="utf-8") as f:
+        texto = f.read()
+
+    ids = list(F.PADROES)
+    tabela = {}
+    for pid in ids:
+        marca = '"%s":' % pid
+        if marca not in texto:
+            raise ValueError(f"padrão {pid} não existe em js/fechamento.js")
+        ini = texto.index(marca)
+        fim = min([texto.index('"%s":' % o) for o in ids
+                   if o != pid and texto.find('"%s":' % o, ini + 1) != -1
+                   and texto.index('"%s":' % o, ini + 1) > ini]
+                  + [len(texto)])
+        bloco = texto[ini:fim]
+
+        dezenas = int(re.search(r"dezenas:\s*(\d+)", bloco).group(1))
+        cru = bloco[bloco.index("descartes:") + 10:bloco.index("garantias:")]
+        trios = re.search(r"triosConsecutivos\((\d+)\)", cru)
+        if trios:
+            n = int(trios.group(1))
+            descartes = [[i, i + 1, i + 2] for i in range(0, n * 3, 3)]
+        else:
+            descartes = [[int(x) for x in re.findall(r"\d+", grupo)]
+                         for grupo in re.findall(r"\[([^\[\]]+)\]", cru)]
+        garantias = [{"saem": int(s), "acertos": int(a)} for s, a in
+                     re.findall(r"saem:\s*(\d+),\s*acertos:\s*(\d+)", bloco)]
+        tabela[pid] = {"dezenas": dezenas, "descartes": descartes,
+                       "garantias": garantias}
+    return texto, tabela
+
+
+def testar_paridade_com_o_js():
+    """A garantia é provada em Python, mas quem a mostra ao leitor é o JS.
+
+    teste.html já compara os dois, só que ele depende de alguém abrir uma
+    página no navegador. Este teste roda no CI e pega a divergência antes
+    de ela virar promessa publicada.
+    """
+    try:
+        texto, js = _ler_padroes_do_js()
+    except Exception as erro:
+        checar(False, f"paridade: nao consegui ler js/fechamento.js ({erro})")
+        return
+
+    checar(set(js) == set(F.PADROES),
+           f"paridade: os dois lados tem os mesmos padroes ({sorted(js)})")
+    for pid in sorted(set(js) & set(F.PADROES)):
+        py = F.PADROES[pid]
+        checar(js[pid]["dezenas"] == py["dezenas"],
+               f"paridade {pid}: dezenas ({js[pid]['dezenas']})")
+        checar(js[pid]["descartes"] == py["descartes"],
+               f"paridade {pid}: descartes batem")
+        checar(js[pid]["garantias"] == py["garantias"],
+               f"paridade {pid}: garantias batem")
+
+    preco = re.search(r"PRECO_JOGO\s*=\s*([\d.]+)", texto)
+    faixa = re.search(r"FAIXA_MINIMA\s*=\s*(\d+)", texto)
+    checar(preco and abs(float(preco.group(1)) - F.PRECO_JOGO) < 1e-9,
+           f"paridade: PRECO_JOGO ({preco.group(1) if preco else '?'})")
+    checar(faixa and int(faixa.group(1)) == F.FAIXA_MINIMA,
+           f"paridade: FAIXA_MINIMA ({faixa.group(1) if faixa else '?'})")
+
+
 if __name__ == "__main__":
     testar_estrutura()
     testar_montagem()
@@ -209,6 +284,7 @@ if __name__ == "__main__":
     testar_garantias()
     testar_pool_campeao()
     testar_pool_campeao_segue_o_ranking()
+    testar_paridade_com_o_js()
 
     # Gabarito de paridade: js/fechamento.js roda os mesmos dados em teste.html
     # e compara resultado a resultado. Sem isso a porta poderia divergir em
@@ -234,9 +310,30 @@ if __name__ == "__main__":
     for semente in (1, 3757, 99999):
         gabarito["sorteios"][str(semente)] = F.dezenas_aleatorias(
             semente, 18, 1, 25)
-    with open(caminho_gabarito, "w", encoding="utf-8") as f:
-        json.dump(gabarito, f, ensure_ascii=False)
-    print("Gabarito de fechamento salvo.")
+
+    # Por padrão CONFERE, não reescreve. Antes este bloco regravava o arquivo
+    # a cada execução — inclusive no CI, que roda este script e depois faz
+    # `git add dados/`. Ou seja: mudar o motor em Python fazia o gabarito se
+    # ajustar sozinho ao motor novo e ser commitado, e a divergência com o JS
+    # só apareceria se alguém abrisse teste.html por conta própria. Uma
+    # fixture que nunca falha não é fixture.
+    # Para regravar de propósito: python robo/testar_fechamento.py --gabarito
+    novo = json.dumps(gabarito, ensure_ascii=False)
+    if "--gabarito" in sys.argv:
+        with open(caminho_gabarito, "w", encoding="utf-8") as f:
+            f.write(novo)
+        print("Gabarito de fechamento REGRAVADO (--gabarito).")
+    elif not os.path.exists(caminho_gabarito):
+        checar(False, "gabarito: dados/gabarito_fechamento.json nao existe "
+                      "(gere com --gabarito)")
+    else:
+        with open(caminho_gabarito, encoding="utf-8") as f:
+            gravado = f.read()
+        checar(gravado == novo,
+               "gabarito: o arquivo commitado bate com o motor de hoje"
+               + ("" if gravado == novo else
+                  " — o motor mudou; confira js/fechamento.js e regrave com "
+                  "--gabarito"))
 
     print()
     if falhas:

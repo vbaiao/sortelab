@@ -41,6 +41,13 @@ jobs:
       - name: Buscar concursos novos na API da Caixa
         run: python robo/atualizar.py
 
+      # Depois do fetch, nunca antes: este gabarito é derivado de dados/*.json,
+      # então regerá-lo primeiro o deixaria velho de novo na mesma execução.
+      # Sem este passo ele ia ficando para trás dos dados a cada rodada do robô
+      # e teste.html acusava erro em loterias que estavam perfeitamente certas.
+      - name: Atualizar o gabarito do motor
+        run: python robo/testar_motor.py
+
       - name: Publicar se houver novidade
         run: |
           if git diff --quiet dados/; then
