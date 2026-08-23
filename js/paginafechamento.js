@@ -6,7 +6,8 @@
   const PRESET_PLACAR = "18-5";
 
   const $ = id => document.getElementById(id);
-  const dinheiro = v => "R$ " + v.toFixed(2).replace(".", ",");
+  const dinheiro = v => (v < 0 ? "-R$ " : "R$ ") +
+    Math.abs(v).toFixed(2).replace(".", ",");
   const dez = n => String(n).padStart(2, "0");
 
   let estado = { fechamento: null };

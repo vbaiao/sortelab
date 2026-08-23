@@ -161,7 +161,8 @@ def buscar(slug, numero=None, timeout=20, bruto=False):
 def rateio_do_concurso(numero):
     """Valores reais de prêmio daquele concurso, vindos da API da Caixa.
 
-    Devolve {"11": 7.0, "12": 14.0, ...} ou None se a API não trouxer.
+    Devolve {"11": 7.0, "12": 14.0, ...} ou None se a API não trouxer,
+    ou se o rateio ainda não tiver sido publicado (tabela toda zerada).
     Nunca estima: sem rateio, o retorno fica em branco na página.
     """
     time.sleep(0.4)   # educação com a API
@@ -176,6 +177,17 @@ def rateio_do_concurso(numero):
         valor = faixa.get("valorPremio")
         if digitos and valor is not None:
             tabela[digitos] = float(valor)
+    # A faixa de 11 acertos sempre tem milhares de ganhadores — diferente da
+    # faixa de 15, que pode legitimamente zerar (ninguém acertou, como no
+    # concurso 3769). Se a Caixa ainda não fechou o rateio, ela devolve a
+    # tabela inteira com valorPremio zerado, e esse dict é truthy (não vazio),
+    # então "tabela or None" deixaria passar zero como prêmio real. Usar a
+    # faixa 11 como sentinela pega justamente essa janela: API já publicou
+    # listaDezenas mas ainda não settou listaRateioPremio. Não simplifique
+    # esse guard removendo a faixa 11 — sem ele um rateio "zerado por ainda
+    # não ter saído" vira "R$ 0,00" permanente no histórico.
+    if tabela.get("11", 0) <= 0:
+        return None
     return tabela or None
 
 
