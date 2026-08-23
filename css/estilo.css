@@ -621,31 +621,31 @@ table.tabela { width: 100%; border-collapse: collapse; font-size: .9rem; }
 
 /* ---------------------------------------------------- desafio */
 
-.cabecalho-desafio, .cabecalho-pagina {
+.cabecalho-desafio {
   position: relative; overflow: hidden;
   background: var(--grafite); color: #fff;
   padding: 56px 0 46px;
 }
-.cabecalho-desafio::before, .cabecalho-pagina::before {
+.cabecalho-desafio::before {
   content: "";
   position: absolute; inset: -40% -10% auto -10%; height: 140%;
   background: radial-gradient(48% 60% at 25% 0%, rgba(207, 159, 63, .2) 0%, transparent 64%);
   pointer-events: none;
 }
-.cabecalho-desafio .miolo, .cabecalho-pagina .miolo { position: relative; z-index: 1; }
-.cabecalho-desafio .rotulo-secao, .cabecalho-pagina .rotulo-secao {
+.cabecalho-desafio .miolo { position: relative; z-index: 1; }
+.cabecalho-desafio .rotulo-secao {
   display: block;
   font-family: var(--dados); font-size: .71rem; font-weight: 600;
   text-transform: uppercase; letter-spacing: .17em;
   color: var(--ouro); margin-bottom: 12px;
 }
-.cabecalho-desafio h1, .cabecalho-pagina h1 {
+.cabecalho-desafio h1 {
   font-family: var(--display); font-weight: 800;
   font-size: clamp(2rem, 6vw, 2.9rem);
   letter-spacing: -.04em; line-height: 1.02;
   margin: 0 0 14px;
 }
-.cabecalho-desafio p, .cabecalho-pagina p { max-width: 62ch; margin: 0; color: rgba(255, 255, 255, .72); }
+.cabecalho-desafio p { max-width: 62ch; margin: 0; color: rgba(255, 255, 255, .72); }
 
 .secao-loteria {
   background: var(--superficie);
