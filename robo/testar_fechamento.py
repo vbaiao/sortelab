@@ -209,6 +209,31 @@ if __name__ == "__main__":
     testar_garantias()
     testar_pool_campeao()
     testar_pool_campeao_segue_o_ranking()
+
+    # Gabarito de paridade: js/fechamento.js roda os mesmos dados em teste.html
+    # e compara resultado a resultado. Sem isso a porta poderia divergir em
+    # silêncio.
+    caminho_gabarito = os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "dados", "gabarito_fechamento.json")
+    dezenas = [2, 3, 5, 6, 9, 10, 11, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25]
+    resultado = [1, 2, 3, 5, 6, 9, 10, 11, 13, 14, 15, 16, 19, 20, 24]
+    rateio = {"11": 7.0, "12": 14.0, "13": 35.0, "14": 1341.42, "15": 565758.41}
+    gabarito = {"padroes": {}, "sorteios": {}}
+    for pid in F.PADROES:
+        base = dezenas[:F.PADROES[pid]["dezenas"]]
+        jogos = F.montar(base, pid)
+        gabarito["padroes"][pid] = {
+            "jogos": jogos,
+            "custo": F.custo_do_padrao(pid),
+            "avaliacao": F.avaliar(jogos, resultado, rateio),
+        }
+    for semente in (1, 3757, 99999):
+        gabarito["sorteios"][str(semente)] = F.dezenas_aleatorias(
+            semente, 18, 1, 25)
+    with open(caminho_gabarito, "w", encoding="utf-8") as f:
+        json.dump(gabarito, f, ensure_ascii=False)
+    print("Gabarito de fechamento salvo.")
+
     print()
     if falhas:
         print(f"{len(falhas)} FALHA(S).")

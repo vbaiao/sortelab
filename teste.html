@@ -10,6 +10,7 @@
 <h1>Teste do motor JS contra o gabarito Python</h1>
 <div id="saida">Rodando…</div>
 <script src="js/motor.js"></script>
+<script src="js/fechamento.js"></script>
 <script>
 "use strict";
 const SL = window.SorteLab;
@@ -58,6 +59,33 @@ fetch("dados/gabarito_teste.json").then(r => r.json()).then(async gabarito => {
           conf[0].acertos.length + " acertos no auto-teste");
     }
   }
+
+  const FZ = window.SorteLabFechamento;
+  const gf = await fetch("dados/gabarito_fechamento.json").then(r => r.json());
+  const dezenas = [2,3,5,6,9,10,11,13,14,15,16,19,20,21,22,23,24,25];
+  const resultado = [1,2,3,5,6,9,10,11,13,14,15,16,19,20,24];
+  const rateio = {11:7.0, 12:14.0, 13:35.0, 14:1341.42, 15:565758.41};
+
+  for (const pid of Object.keys(gf.padroes)) {
+    const esperado = gf.padroes[pid];
+    const jogos = FZ.montar(dezenas.slice(0, FZ.PADROES[pid].dezenas), pid);
+    log(JSON.stringify(jogos) === JSON.stringify(esperado.jogos),
+        "fechamento " + pid + ": montagem bate com o Python");
+    log(Math.abs(FZ.custoDoPadrao(pid) - esperado.custo) < 0.001,
+        "fechamento " + pid + ": custo R$ " + FZ.custoDoPadrao(pid));
+    const nota = FZ.avaliar(jogos, resultado, rateio);
+    log(JSON.stringify(nota.acertos) === JSON.stringify(esperado.avaliacao.acertos),
+        "fechamento " + pid + ": acertos batem com o Python");
+    log(Math.abs(nota.retorno - esperado.avaliacao.retorno) < 0.001,
+        "fechamento " + pid + ": retorno R$ " + nota.retorno);
+  }
+
+  for (const semente of Object.keys(gf.sorteios)) {
+    const saiu = FZ.dezenasAleatorias(Number(semente), 18, 1, 25);
+    log(JSON.stringify(saiu) === JSON.stringify(gf.sorteios[semente]),
+        "sorteio semente " + semente + ": bate com o Python");
+  }
+
   const erros = linhas.filter(l => l.includes("erro")).length;
   linhas.unshift("<h2>" + (erros ? erros + " ERRO(S)" : "TUDO OK ✔") + "</h2>");
   saida.innerHTML = linhas.join("");
