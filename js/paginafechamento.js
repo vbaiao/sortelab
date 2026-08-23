@@ -59,6 +59,24 @@
     $("dezenas").value = lista.map(dez).join(" ");
   }
 
+  /* Sorteia dezenas para o visitante brincar. Aqui usamos Math.random de
+     propósito, e não o mulberry32 do placar: aquele existe para ser
+     reproduzível por terceiros, o que só importa quando a gente precisa
+     provar que não trapaceou. Num botão que a pessoa clica quantas vezes
+     quiser, semente fixa daria sempre o mesmo jogo — o contrário do que ela
+     espera. */
+  function sortearDezenas() {
+    const alvo = FZ.PADROES[$("padrao").value].dezenas;
+    const baralho = [];
+    for (let n = 1; n <= 25; n++) baralho.push(n);
+    for (let i = baralho.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const troca = baralho[i]; baralho[i] = baralho[j]; baralho[j] = troca;
+    }
+    escreverDezenas(baralho.slice(0, alvo).sort((a, b) => a - b));
+    montarFechamento();
+  }
+
   /* Cada padrão pede uma quantidade fixa de dezenas. Trocar o padrão sem
      ajustar o campo deixava o visitante encarando "o padrão 17-7 precisa de
      exatamente 17 dezenas" e adivinhando qual apagar. Aqui a lista se ajusta
@@ -204,5 +222,6 @@
 
   $("btn-montar").addEventListener("click", montarFechamento);
   $("btn-usar-campeao").addEventListener("click", usarDoCampeao);
+  $("btn-sortear").addEventListener("click", sortearDezenas);
   $("padrao").addEventListener("change", ajustarAoPadrao);
 })();
