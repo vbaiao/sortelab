@@ -106,6 +106,8 @@ def atualizar_fechamento(concursos):
         pendente = dados["pendente"]
         sorteio = indice[pendente["apos"] + 1]
         if len(sorteio[2]) != 15:
+            print(f"  Fechamento: concurso {sorteio[0]} ainda sem dezenas; "
+                  f"aguardando.")
             break                      # concurso sem dezenas: espera a próxima rodada
         rateio = rateio_do_concurso(sorteio[0])
         linha = {"concurso": sorteio[0], "data": sorteio[1],
@@ -162,6 +164,7 @@ def rateio_do_concurso(numero):
     Devolve {"11": 7.0, "12": 14.0, ...} ou None se a API não trouxer.
     Nunca estima: sem rateio, o retorno fica em branco na página.
     """
+    time.sleep(0.4)   # educação com a API
     try:
         dados = buscar("lotofacil", numero, bruto=True)
     except Exception:
