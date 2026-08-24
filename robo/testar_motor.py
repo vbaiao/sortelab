@@ -1,40 +1,65 @@
 # -*- coding: utf-8 -*-
-"""Teste do motor JS sem Node: roda motor.js num mini-interpretador? Não —
-compara o RESULTADO determinístico do motor Python de referência com o que o
-navegador calculará, gerando um gabarito em JSON que a página de teste lê.
+"""Gera o gabarito que teste.html usa para conferir o motor em JavaScript.
 
-Gera dados/gabarito_teste.json com, por loteria: jogo campeão esperado e
-alguns valores de custo/chance. A página teste.html compara e mostra OK/ERRO.
+Não dá para rodar js/motor.js aqui — não há Node. Então o Python calcula os
+mesmos valores, grava em dados/gabarito_teste.json, e a página de teste
+compara no navegador e mostra OK ou ERRO.
+
+Este script roda no robô, DEPOIS de buscar os resultados novos: o gabarito é
+derivado de dados/*.json, então gerá-lo antes o deixaria velho na mesma
+execução. Sem isso ele ia ficando para trás a cada rodada e teste.html
+acusava erro em loterias que estavam perfeitamente corretas.
+
+Tudo aqui usa só o que está dentro do repositório. A versão anterior
+importava gerador_loterias.py da pasta acima — o programa de linha de
+comando, que nunca foi versionado — e por isso funcionava na máquina do
+autor e quebrava o robô no GitHub Actions.
 """
 
 import json
 import os
 import sys
+from math import comb
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+import campeao
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, os.path.join(RAIZ, ".."))
-
-from gerador_loterias import (LOTERIAS, calcular_estatisticas, custo_aposta,
-                              jogo_campeao, total_combinacoes,
-                              combinacoes_cobertas)
-
 PASTA_DADOS = os.path.join(RAIZ, "dados")
 
+NOMES = {
+    "megasena": "Mega-Sena", "lotofacil": "Lotofácil", "quina": "Quina",
+    "lotomania": "Lotomania", "duplasena": "Dupla Sena",
+    "diadesorte": "Dia de Sorte", "timemania": "Timemania",
+    "maismilionaria": "+Milionária",
+}
+
+
+def chance_um_em(ficha):
+    """Uma aposta mínima cobre quantas das combinações possíveis do sorteio."""
+    universo = ficha["hi"] - ficha["lo"] + 1
+    return comb(universo, ficha["sorteadas"]) // comb(ficha["k"],
+                                                      ficha["sorteadas"])
+
+
 gabarito = {}
-for cfg in LOTERIAS:
-    with open(os.path.join(PASTA_DADOS, f"{cfg['slug']}.json"),
-              encoding="utf-8") as f:
+for slug, ficha in campeao.FICHAS.items():
+    caminho = os.path.join(PASTA_DADOS, f"{slug}.json")
+    if not os.path.exists(caminho):
+        print(f"{NOMES[slug]}: sem dados, pulando.")
+        continue
+    with open(caminho, encoding="utf-8") as f:
         concursos = json.load(f)["concursos"]
-    sorteios = [(c[0], c[1], c[2]) for c in concursos]
-    stats = calcular_estatisticas(cfg, sorteios)
-    k = cfg["aposta_min"]
-    gabarito[cfg["slug"]] = {
-        "campeao": jogo_campeao(cfg, stats),
-        "custo_minimo": custo_aposta(cfg, k),
-        "chance_um_em": total_combinacoes(cfg) // combinacoes_cobertas(cfg, k),
-        "total": stats["total"],
+
+    gabarito[slug] = {
+        "campeao": campeao.jogo_campeao(slug, concursos),
+        # A aposta mínima é uma combinação só, então custa o preço cheio.
+        "custo_minimo": ficha["preco"],
+        "chance_um_em": chance_um_em(ficha),
+        "total": len(concursos),
     }
-    print(f"{cfg['nome']}: campeão {gabarito[cfg['slug']]['campeao']}")
+    print(f"{NOMES[slug]}: campeão {gabarito[slug]['campeao']}")
 
 with open(os.path.join(PASTA_DADOS, "gabarito_teste.json"), "w",
           encoding="utf-8") as f:

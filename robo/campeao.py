@@ -13,15 +13,17 @@ JANELA_RECENTE = 200
 MAX_COMBOS = 400_000
 PESOS = (0.50, 0.35, 0.15)   # histórico, recente, atraso
 
+# `preco` e o valor da aposta minima. Esta tabela e espelhada em
+# js/motor.js (LOTERIAS) e robo/testar_fechamento.py confere as duas.
 FICHAS = {
-    "megasena":       dict(lo=1, hi=60, sorteadas=6,  k=6),
-    "lotofacil":      dict(lo=1, hi=25, sorteadas=15, k=15),
-    "quina":          dict(lo=1, hi=80, sorteadas=5,  k=5),
-    "lotomania":      dict(lo=0, hi=99, sorteadas=20, k=50),
-    "duplasena":      dict(lo=1, hi=50, sorteadas=6,  k=6),
-    "diadesorte":     dict(lo=1, hi=31, sorteadas=7,  k=7),
-    "timemania":      dict(lo=1, hi=80, sorteadas=7,  k=10),
-    "maismilionaria": dict(lo=1, hi=50, sorteadas=6,  k=6),
+    "megasena":       dict(lo=1, hi=60, sorteadas=6,  k=6,  preco=6.00),
+    "lotofacil":      dict(lo=1, hi=25, sorteadas=15, k=15, preco=3.50),
+    "quina":          dict(lo=1, hi=80, sorteadas=5,  k=5,  preco=3.00),
+    "lotomania":      dict(lo=0, hi=99, sorteadas=20, k=50, preco=3.50),
+    "duplasena":      dict(lo=1, hi=50, sorteadas=6,  k=6,  preco=3.00),
+    "diadesorte":     dict(lo=1, hi=31, sorteadas=7,  k=7,  preco=3.00),
+    "timemania":      dict(lo=1, hi=80, sorteadas=7,  k=10, preco=3.50),
+    "maismilionaria": dict(lo=1, hi=50, sorteadas=6,  k=6,  preco=6.00),
 }
 
 

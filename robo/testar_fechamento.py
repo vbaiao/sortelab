@@ -265,6 +265,25 @@ def testar_paridade_com_o_js():
         checar(js[pid]["garantias"] == py["garantias"],
                f"paridade {pid}: garantias batem")
 
+    # As fichas de campeao.py sao a terceira copia da mesma configuracao
+    # (as outras duas sao gerador_loterias.py, fora do repo, e motor.js).
+    # O gabarito do motor depende delas, entao divergencia aqui quebra o
+    # teste do navegador sem dizer por que.
+    with open(os.path.join(RAIZ, "js", "motor.js"), encoding="utf-8") as f:
+        motor = f.read()
+    for slug, ficha in sorted(campeao.FICHAS.items()):
+        m = re.search(r"slug: \"%s\".*?lo: (\d+), hi: (\d+), sorteadas: (\d+),"
+                      r"\s*apostaMin: (\d+).*?preco: ([\d.]+)" % slug,
+                      motor, re.S)
+        if not m:
+            checar(False, f"fichas {slug}: nao achei em js/motor.js")
+            continue
+        lo, hi, sort, kmin, preco = m.groups()
+        bate = (int(lo) == ficha["lo"] and int(hi) == ficha["hi"] and
+                int(sort) == ficha["sorteadas"] and
+                abs(float(preco) - ficha["preco"]) < 1e-9)
+        checar(bate, f"fichas {slug}: lo/hi/sorteadas/preco batem com motor.js")
+
     preco = re.search(r"PRECO_JOGO\s*=\s*([\d.]+)", texto)
     faixa = re.search(r"FAIXA_MINIMA\s*=\s*(\d+)", texto)
     checar(preco and abs(float(preco.group(1)) - F.PRECO_JOGO) < 1e-9,
