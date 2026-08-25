@@ -4,13 +4,15 @@
 (function () {
   const FZ = window.SorteLabFechamento;
   const PRESET_PLACAR = "18-5";
+  const API_CAIXA =
+    "https://servicebus2.caixa.gov.br/portaldeloterias/api/lotofacil/";
 
   const $ = id => document.getElementById(id);
   const dinheiro = v => (v < 0 ? "-R$ " : "R$ ") +
     Math.abs(v).toFixed(2).replace(".", ",");
   const dez = n => String(n).padStart(2, "0");
 
-  let estado = { fechamento: null, ultimoConcurso: null };
+  let estado = { fechamento: null, aoVivo: null, buscaFalhou: false };
 
   function lerDezenas(texto) {
     const nums = (texto.match(/\d+/g) || []).map(Number);
@@ -100,6 +102,15 @@
     montarFechamento();
   }
 
+  /* O histórico gravado mais, se houver, a linha que a página conferiu
+     sozinha. Placar e conta usam as duas juntas — mostrar o resultado na
+     tabela e deixá-lo fora da soma daria dois números que se contradizem
+     na mesma tela. */
+  function todasAsLinhas() {
+    const gravado = estado.fechamento ? estado.fechamento.historico : [];
+    return estado.aoVivo ? gravado.concat([estado.aoVivo]) : gravado;
+  }
+
   function linhaPlacar(linha, lado) {
     const d = linha[lado];
     const melhor = Math.max.apply(null, d.acertos);
@@ -111,30 +122,38 @@
   function desenharPlacar() {
     const dados = estado.fechamento;
     if (!dados) return;
-    const historico = dados.historico.slice().reverse();
+    const historico = todasAsLinhas().slice().reverse();
     $("placar-corpo").innerHTML = historico.map(linha =>
-      "<tr><td>" + linha.concurso + "</td><td>" + linha.data + "</td>" +
+      "<tr><td>" + linha.concurso +
+      (linha.aoVivo ? " <span class='ao-vivo'>ao vivo</span>" : "") +
+      "</td><td>" + linha.data + "</td>" +
       linhaPlacar(linha, "campeao") + linhaPlacar(linha, "aleatorio") +
       "</tr>").join("") ||
       "<tr><td colspan='8'>Nenhum sorteio conferido ainda.</td></tr>";
 
     if (dados.pendente) {
       const alvo = dados.pendente.apos + 1;
-      /* O robô roda por cron do GitHub Actions, que descarta boa parte dos
-         agendamentos — já medimos 6 execuções de 48 num dia. Então existe
-         uma janela real, às vezes de horas, entre o resultado sair e o
-         palpite ser conferido. Dizer "antes do sorteio" nessa janela é
-         afirmar algo que o leitor sabe ser falso, justamente na página que
-         pede confiança. Quando o sorteio já saiu, a página diz isso. */
-      const jaSorteou = estado.ultimoConcurso !== null &&
-                        estado.ultimoConcurso >= alvo;
-      const situacao = jaSorteou
-        ? "<p>O concurso <strong>" + alvo + "</strong> já foi sorteado. " +
-          "Estas dezenas foram cravadas antes disso e continuam aqui, " +
-          "intactas, esperando o robô conferir — ele roda de tempos em " +
-          "tempos e a linha entra no placar assim que ele passar.</p>"
-        : "<p>Cravado para o concurso <strong>" + alvo + "</strong>, que " +
-          "ainda não foi sorteado:</p>";
+      /* Três estados possíveis, e a página precisa dizer a verdade nos três.
+         O robô roda por cron do GitHub Actions, que descarta boa parte dos
+         agendamentos — já medimos 6 execuções de 48 num dia. Então a janela
+         entre o resultado sair e o palpite ser conferido é real e às vezes
+         dura horas. */
+      let situacao;
+      if (estado.aoVivo) {
+        situacao = "<p>O concurso <strong>" + alvo + "</strong> já saiu e a " +
+          "conferência está no placar aqui embaixo, marcada como " +
+          "<strong>ao vivo</strong> — foi esta página que fez a conta, " +
+          "buscando o resultado direto na Caixa. O robô grava a mesma linha " +
+          "quando passar, e a marcação some. Estas dezenas foram cravadas " +
+          "antes do sorteio:</p>";
+      } else if (estado.buscaFalhou) {
+        situacao = "<p>Cravado para o concurso <strong>" + alvo +
+          "</strong>. Não deu para consultar a Caixa agora, então não dá " +
+          "para dizer daqui se o sorteio já saiu:</p>";
+      } else {
+        situacao = "<p>Cravado para o concurso <strong>" + alvo +
+          "</strong>, que ainda não foi sorteado:</p>";
+      }
       $("pendente").innerHTML = situacao +
         "<p><strong>Campeão:</strong> " +
         dados.pendente.campeao.dezenas.map(dez).join(" ") + "</p>" +
@@ -147,7 +166,7 @@
   function desenharConta() {
     const dados = estado.fechamento;
     if (!dados) return;
-    const conta = FZ.contaAcumulada(dados.historico, dados.preset);
+    const conta = FZ.contaAcumulada(todasAsLinhas(), dados.preset);
     const linha = (nome, c) => {
       // Zero não é nem ganho nem perda — só vermelho quando saldo < 0 e só
       // verde quando saldo > 0. Colorir um "ainda não aconteceu nada" de
@@ -192,18 +211,78 @@
     $("conta-ressalva").textContent = msg + " Tente recarregar a página em instantes.";
   }
 
-  /* Descobre o último concurso já sorteado, só para saber se o pendente está
-     esperando conferência. Falha aqui não é problema: sem o número, a página
-     simplesmente não afirma nada sobre o sorteio ter saído. */
-  function buscarUltimoConcurso() {
-    return fetch("dados/lotofacil.json")
-      .then(r => (r.ok ? r.json() : null))
-      .then(base => {
-        const lista = base && base.concursos;
-        estado.ultimoConcurso = lista && lista.length
-          ? lista[lista.length - 1][0] : null;
+  /* Pergunta o concurso direto à Caixa, e não a dados/lotofacil.json.
+     Parece um detalhe e não é: os dois arquivos locais são gravados pela
+     MESMA rodada do robô, então ficam velhos juntos. Comparar um com o
+     outro nunca acusaria atraso — os dois estariam igualmente parados no
+     passado. Só uma fonte de fora enxerga que o sorteio aconteceu.
+     Falha aqui não quebra nada: sem resposta, a página só não afirma que
+     o sorteio saiu. */
+  function pedirCaixa(caminho) {
+    const controle = new AbortController();
+    const prazo = setTimeout(() => controle.abort(), 8000);
+    return fetch(API_CAIXA + caminho, { signal: controle.signal })
+      .then(r => {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
       })
-      .catch(() => { estado.ultimoConcurso = null; });
+      .finally(() => clearTimeout(prazo));
+  }
+
+  function lerSorteio(d) {
+    const dezenas = (d.listaDezenas || []).map(Number).sort((a, b) => a - b);
+    if (dezenas.length !== FZ.DEZENAS_POR_JOGO) return null;
+    const rateio = {};
+    (d.listaRateioPremio || []).forEach(f => {
+      const faixa = String(f.descricaoFaixa || "").replace(/\D/g, "");
+      if (faixa && f.valorPremio != null) rateio[faixa] = Number(f.valorPremio);
+    });
+    // Mesma guarda do robô: a faixa de 11 sempre tem milhares de ganhadores,
+    // então zero ali quer dizer rateio ainda não liquidado — não que ninguém
+    // ganhou. Sem ele o retorno fica em branco em vez de virar R$ 0,00.
+    const liquidado = Number(rateio[FZ.FAIXA_MINIMA]) > 0;
+    return { concurso: Number(d.numero), data: d.dataApuracao,
+             resultado: dezenas, rateio: liquidado ? rateio : null };
+  }
+
+  /* Descobre a situação do concurso pendente.
+
+     Pergunta DIRETO pelo concurso alvo, e não pelo endpoint do "último".
+     Parece a ordem errada e não é: o endpoint do último atrasa. Neste
+     momento ele responde 3769 enquanto /lotofacil/3770 devolve o 3770
+     completo, com as 15 dezenas. Confiar nele faria a página jurar que o
+     sorteio não saiu tendo o resultado a uma chamada de distância.
+
+     A ambiguidade que sobra: para um concurso inexistente a API devolve
+     HTTP 500 — o mesmo de uma pane. Aí sim o "último" serve, como
+     desempate: se ele responde, a API está de pé e o 500 no alvo significa
+     "ainda não existe"; se ele também falha, é indisponibilidade mesmo. */
+  function situacaoDoPendente(alvo) {
+    return pedirCaixa(alvo)
+      .then(d => {
+        const s = lerSorteio(d);
+        return s ? { estado: "saiu", sorteio: s } : { estado: "aguardando" };
+      })
+      .catch(() => pedirCaixa("")
+        .then(() => ({ estado: "aguardando" }))
+        .catch(() => ({ estado: "indisponivel" })));
+  }
+
+  /* Confere o pendente contra um sorteio recém-saído, com o mesmo motor que
+     o robô usa. Não grava nada: é só a página adiantando o que o robô vai
+     registrar quando passar. */
+  function conferirAoVivo(pendente, sorteio) {
+    const linha = { concurso: sorteio.concurso, data: sorteio.data,
+                    resultado: sorteio.resultado, rateio: sorteio.rateio,
+                    aoVivo: true };
+    ["campeao", "aleatorio"].forEach(lado => {
+      const dezenas = pendente[lado].dezenas;
+      const jogos = FZ.montar(dezenas, estado.fechamento.preset);
+      const nota = FZ.avaliar(jogos, sorteio.resultado, sorteio.rateio);
+      linha[lado] = { dezenas: dezenas, acertos: nota.acertos,
+                      retorno: nota.retorno };
+    });
+    return linha;
   }
 
   fetch("dados/fechamento.json")
@@ -213,10 +292,25 @@
     })
     .then(dados => {
       estado.fechamento = dados;
-      desenharConta();
       usarDoCampeao();
-      // O placar depende do último concurso, então espera essa consulta.
-      return buscarUltimoConcurso().then(desenharPlacar);
+      if (!dados.pendente) {
+        desenharPlacar();
+        desenharConta();
+        return;
+      }
+      // Desenha já com o que temos e melhora depois: a consulta à Caixa
+      // pode demorar ou falhar, e a página não deve ficar em branco por isso.
+      desenharPlacar();
+      desenharConta();
+      return situacaoDoPendente(dados.pendente.apos + 1).then(r => {
+        if (r.estado === "saiu") {
+          estado.aoVivo = conferirAoVivo(dados.pendente, r.sorteio);
+        } else if (r.estado === "indisponivel") {
+          estado.buscaFalhou = true;
+        }
+        desenharPlacar();
+        desenharConta();
+      });
     })
     .catch(mostrarFalhaDeCarga);
 
