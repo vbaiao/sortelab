@@ -767,3 +767,9 @@ table.hist { width: 100%; border-collapse: collapse; font-size: .89rem; }
   color: #fff; background: var(--cor);
   border-radius: 999px; padding: 2px 7px; vertical-align: middle;
 }
+
+.jogos-semente {
+  margin: 0;
+  font-family: var(--dados); font-size: 1rem; letter-spacing: .02em;
+  font-variant-numeric: tabular-nums;
+}

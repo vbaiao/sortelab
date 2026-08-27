@@ -235,12 +235,50 @@ lado aleatório são sorteadas com uma semente igual ao número do concurso
 sempre o mesmo número do concurso cravado. Qualquer pessoa reproduz e
 confere que o palpite foi cravado antes, e não escolhido depois.</p>
 
-<details>
-<summary>Ver o código que sorteia as dezenas</summary>
+<div class="cartao">
+  <form onsubmit="return false">
+    <div class="linha-campos">
+      <div class="campo">
+        <label for="semente">Digite um número de concurso</label>
+        <input type="number" id="semente" min="1" step="1" value="3773">
+      </div>
+    </div>
+    <div class="botoes">
+      <button class="botao" type="button" id="btn-semente">Ver as dezenas</button>
+    </div>
+  </form>
+  <div id="saida-semente"></div>
+</div>
 
-<p class="dica">Só interessa a quem quiser refazer a conta. Cole num
-console de navegador e chame <em>dezenasAleatorias</em> com o número do
-concurso — tem que sair exatamente as 18 dezenas que estão no card.</p>
+<p>Experimente: digite o número de qualquer concurso e compare com o que
+está no placar acima. O mesmo número devolve sempre as mesmas dezenas,
+hoje e daqui a dez anos. Não tem sorteio nem escolha no meio — é conta.</p>
+
+<details>
+<summary>Quero conferir por fora, sem confiar nesta página</summary>
+
+<p>Justo: o botão acima usa o código do próprio site, então ele prova que a
+regra é sempre a mesma, mas não prova que a regra é essa. Para conferir de
+fora, siga estes passos no computador:</p>
+
+<ol>
+  <li>Nesta página, aperte a tecla <strong>F12</strong>. Abre um painel de
+  ferramentas do navegador.</li>
+  <li>Nesse painel, clique na aba <strong>Console</strong>.</li>
+  <li>Copie o código que está aqui embaixo e cole ali. Aperte
+  <strong>Enter</strong>.</li>
+  <li>Digite <strong>dezenasAleatorias(3773)</strong> e aperte
+  <strong>Enter</strong> de novo. Troque 3773 pelo concurso que quiser.</li>
+</ol>
+
+<p>Vão aparecer 18 números. São exatamente os mesmos que o site mostra —
+e você acabou de calculá-los com o código na sua frente, sem pedir nada
+ao site.</p>
+
+<p class="dica">Quem programa pode ir além: reescreva estas duas funções em
+qualquer linguagem e compare. É o que fazemos aqui — existe uma versão em
+Python no repositório, e um teste automático confere as duas antes de
+qualquer coisa ir ao ar.</p>
 
 <pre class="rolagem-x"><code>function mulberry32(semente) {
   let estado = semente &gt;&gt;&gt; 0;

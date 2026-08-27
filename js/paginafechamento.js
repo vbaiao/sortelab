@@ -152,6 +152,25 @@
       "corte. Por isso ele espera, e o aleatório não.</p>";
   }
 
+  /* Deixa qualquer pessoa conferir a regra do lado aleatório sem abrir
+     console nenhum. Não substitui a auditoria de verdade — o código roda
+     desta própria página — mas mostra o que importa para quem só quer
+     entender: o mesmo concurso devolve sempre as mesmas dezenas. O passo a
+     passo para conferir por fora fica logo abaixo, na página. */
+  function mostrarDezenasDaSemente() {
+    const saida = $("saida-semente");
+    const n = parseInt($("semente").value, 10);
+    if (!n || n < 1) {
+      saida.innerHTML = "<p class='erro'>Digite o número de um concurso, " +
+        "como 3773.</p>";
+      return;
+    }
+    const dezenas = FZ.dezenasAleatorias(n, 18, 1, 25).map(dez).join(" ");
+    saida.innerHTML =
+      "<p class='dica'><em>Concurso " + n + " · semente " + n + "</em></p>" +
+      "<p class='jogos-semente'>" + dezenas + "</p>";
+  }
+
   function desenharPlacar() {
     const dados = estado.fechamento;
     if (!dados) return;
@@ -373,4 +392,6 @@
   $("btn-usar-campeao").addEventListener("click", usarDoCampeao);
   $("btn-sortear").addEventListener("click", sortearDezenas);
   $("padrao").addEventListener("change", ajustarAoPadrao);
+  $("btn-semente").addEventListener("click", mostrarDezenasDaSemente);
+  mostrarDezenasDaSemente();
 })();
