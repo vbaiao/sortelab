@@ -133,41 +133,58 @@
 
     if (dados.pendente) {
       const alvo = dados.pendente.apos + 1;
-      /* Três estados possíveis, e a página precisa dizer a verdade nos três.
-         O robô roda por cron do GitHub Actions, que descarta boa parte dos
+      const dezenasDe = lado =>
+        "<p><strong>" + (lado === "campeao" ? "Campeão" : "Aleatório") +
+        "</strong>" + (lado === "aleatorio"
+          ? " (semente " + dados.pendente.aleatorio.semente + ")" : "") +
+        ": " + dados.pendente[lado].dezenas.map(dez).join(" ") + "</p>";
+
+      /* Três estados, e a página precisa dizer a verdade nos três. O robô
+         roda por cron do GitHub Actions, que descarta boa parte dos
          agendamentos — já medimos 6 execuções de 48 num dia. Então a janela
-         entre o resultado sair e o palpite ser conferido é real e às vezes
+         entre o resultado sair e o palpite ser gravado é real e às vezes
          dura horas. */
-      let situacao;
       if (estado.aoVivo) {
-        situacao = "<p>O concurso <strong>" + alvo + "</strong> já saiu e a " +
-          "conferência está no placar aqui embaixo, marcada como " +
+        /* Depois de conferido, este palpite NÃO está mais em aberto: ele já
+           correu e o resultado está na tabela. Continuar apresentando as
+           mesmas dezenas como se fossem a aposta da vez faz o leitor
+           procurar o concurso seguinte e não achar.
+
+           E a página não pode cravar o próximo por conta própria. Não é
+           limitação técnica — é o que dá valor ao painel: um palpite só
+           prova alguma coisa se estiver publicado, com data, ANTES do
+           sorteio. Calculado no navegador depois, não provaria nada. */
+        $("pendente").innerHTML =
+          "<p class='dica'><em>Este palpite já correu.</em></p>" +
+          "<p>Estas são as dezenas que estavam cravadas para o concurso " +
+          "<strong>" + alvo + "</strong>, publicadas aqui antes do sorteio. " +
+          "Ele já saiu, e a conferência está no placar abaixo marcada como " +
           "<strong>ao vivo</strong> — foi esta página que fez a conta, " +
-          "buscando o resultado direto na Caixa. O robô grava a mesma linha " +
-          "quando passar, e a marcação some. Estas dezenas foram cravadas " +
-          "antes do sorteio:</p>";
+          "buscando o resultado direto na Caixa.</p>" +
+          dezenasDe("campeao") + dezenasDe("aleatorio") +
+          "<p>O palpite do concurso <strong>" + (alvo + 1) + "</strong> " +
+          "aparece assim que o robô cravar. Ele não pode ser calculado " +
+          "aqui no navegador: um palpite só vale como prova se estiver " +
+          "publicado antes do sorteio, e não depois.</p>";
       } else if (estado.buscaFalhou) {
-        situacao = "<p>Cravado para o concurso <strong>" + alvo +
-          "</strong>. Não deu para consultar a Caixa agora, então não dá " +
-          "para dizer daqui se o sorteio já saiu:</p>";
+        $("pendente").innerHTML =
+          "<p>Cravado para o concurso <strong>" + alvo + "</strong>. Não " +
+          "deu para consultar a Caixa agora, então não dá para dizer daqui " +
+          "se o sorteio já saiu:</p>" +
+          dezenasDe("campeao") + dezenasDe("aleatorio");
       } else {
         /* Não dizer "ainda não foi sorteado". A página só sabe o que a API
            da Caixa conta, e ela atrasa: já vimos o resultado circulando na
            imprensa horas antes de aparecer ali. Afirmar que o sorteio não
            aconteceu, quando aconteceu, é dar por certeza o que é só o
-           limite do que a página enxerga — e numa página cujo assunto é
-           honestidade com números isso não passa. */
-        situacao = "<p>Cravado para o concurso <strong>" + alvo +
-          "</strong>. A Caixa ainda não publicou o resultado dele no " +
-          "sistema de onde a gente lê. Assim que publicar, a conferência " +
-          "aparece aqui sozinha — mesmo que o robô demore:</p>";
+           limite do que a página enxerga. */
+        $("pendente").innerHTML =
+          "<p>Cravado para o concurso <strong>" + alvo + "</strong>. A " +
+          "Caixa ainda não publicou o resultado dele no sistema de onde a " +
+          "gente lê. Assim que publicar, a conferência aparece aqui " +
+          "sozinha — mesmo que o robô demore:</p>" +
+          dezenasDe("campeao") + dezenasDe("aleatorio");
       }
-      $("pendente").innerHTML = situacao +
-        "<p><strong>Campeão:</strong> " +
-        dados.pendente.campeao.dezenas.map(dez).join(" ") + "</p>" +
-        "<p><strong>Aleatório</strong> (semente " +
-        dados.pendente.aleatorio.semente + "): " +
-        dados.pendente.aleatorio.dezenas.map(dez).join(" ") + "</p>";
     }
   }
 
