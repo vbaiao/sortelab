@@ -119,6 +119,39 @@
       (d.retorno === null ? "—" : dinheiro(d.retorno)) + "</td>";
   }
 
+  /* O que já dá para mostrar do próximo concurso, e o que não dá.
+
+     O lado ALEATÓRIO sai na hora: ele é função pura do número do concurso.
+     Semente 3773 devolve sempre as mesmas 18 dezenas, e o algoritmo está
+     publicado logo abaixo nesta página. Não há nada a cravar — qualquer
+     pessoa roda, antes ou depois do sorteio, e chega no mesmo resultado.
+     Esconder isso até o robô passar seria esconder o que já é público.
+
+     O lado CAMPEÃO não sai. Ele depende de QUAIS concursos entraram na
+     conta: calculado com o histórico até o 3772 dá um jogo, com o 3773
+     incluído dá outro — e esse segundo seria trapaça. O que o robô grava
+     não é o número, é o corte. Por isso ele espera. */
+  function proximoPalpite(proximo) {
+    let aleatorio;
+    try {
+      aleatorio = FZ.dezenasAleatorias(proximo, 18, 1, 25).map(dez).join(" ");
+    } catch (e) {
+      return "";
+    }
+    return "<hr>" +
+      "<p class='dica'><em>Próximo concurso: " + proximo + "</em></p>" +
+      "<p><strong>Aleatório</strong> (semente " + proximo + "): " +
+      aleatorio + "</p>" +
+      "<p>Este lado não precisa esperar o robô: ele é só uma conta em cima " +
+      "do número do concurso, e o código está aqui na página. Rode você " +
+      "mesmo — tem que dar exatamente estas dezenas.</p>" +
+      "<p><strong>Campeão:</strong> sai quando o robô cravar. Este depende " +
+      "de quais concursos entraram na conta — feito com o histórico até o " +
+      "<strong>" + (proximo - 1) + "</strong> dá um jogo, feito depois do " +
+      "sorteio daria outro. O que fica registrado não é o número, é o " +
+      "corte. Por isso ele espera, e o aleatório não.</p>";
+  }
+
   function desenharPlacar() {
     const dados = estado.fechamento;
     if (!dados) return;
@@ -162,10 +195,7 @@
           "<strong>ao vivo</strong> — foi esta página que fez a conta, " +
           "buscando o resultado direto na Caixa.</p>" +
           dezenasDe("campeao") + dezenasDe("aleatorio") +
-          "<p>O palpite do concurso <strong>" + (alvo + 1) + "</strong> " +
-          "aparece assim que o robô cravar. Ele não pode ser calculado " +
-          "aqui no navegador: um palpite só vale como prova se estiver " +
-          "publicado antes do sorteio, e não depois.</p>";
+          proximoPalpite(alvo + 1);
       } else if (estado.buscaFalhou) {
         $("pendente").innerHTML =
           "<p>Cravado para o concurso <strong>" + alvo + "</strong>. Não " +
