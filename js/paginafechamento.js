@@ -151,8 +151,16 @@
           "</strong>. Não deu para consultar a Caixa agora, então não dá " +
           "para dizer daqui se o sorteio já saiu:</p>";
       } else {
+        /* Não dizer "ainda não foi sorteado". A página só sabe o que a API
+           da Caixa conta, e ela atrasa: já vimos o resultado circulando na
+           imprensa horas antes de aparecer ali. Afirmar que o sorteio não
+           aconteceu, quando aconteceu, é dar por certeza o que é só o
+           limite do que a página enxerga — e numa página cujo assunto é
+           honestidade com números isso não passa. */
         situacao = "<p>Cravado para o concurso <strong>" + alvo +
-          "</strong>, que ainda não foi sorteado:</p>";
+          "</strong>. A Caixa ainda não publicou o resultado dele no " +
+          "sistema de onde a gente lê. Assim que publicar, a conferência " +
+          "aparece aqui sozinha — mesmo que o robô demore:</p>";
       }
       $("pendente").innerHTML = situacao +
         "<p><strong>Campeão:</strong> " +
